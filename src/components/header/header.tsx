@@ -1,5 +1,6 @@
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
+import { NavbarRight } from "../navbar-right"
 
 export function Header() {
   return (
@@ -11,6 +12,9 @@ export function Header() {
           className="mx-2 data-[orientation=vertical]:h-4"
         />
         <h1 className="text-base font-medium">Jalin Pembayaran Nusantara</h1>
+      </div>
+      <div className="ml-auto px-4">
+        <NavbarRight />
       </div>
     </header>
   )
