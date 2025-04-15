@@ -24,7 +24,6 @@ import {
   UsersIcon,
 } from "lucide-react"
 
-import { NavDocuments } from "@/components/nav-documents"
 import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
@@ -253,10 +252,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  {/* <Command className="size-4" /> */}
-                  <Avatar className="h-8 w-8 rounded-lg bg-white">
+                  <Command className="size-4" />
+                  {/* <Avatar className="h-8 w-8 rounded-lg bg-white">
                     <AvatarImage src="/jalin-png.png" alt="Jalin Pembayaran" />
-                  </Avatar>
+                  </Avatar> */}
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">Cashback Dashboard</span>
