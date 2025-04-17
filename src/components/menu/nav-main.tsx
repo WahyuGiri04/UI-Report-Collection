@@ -1,8 +1,5 @@
 "use client"
 
-import { MailIcon, PlusCircleIcon, type LucideIcon } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -11,6 +8,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { SafeDynamicIcon } from "../util/safe-dynamic-icon"
 
 export function NavMain({
   items,
@@ -18,7 +16,7 @@ export function NavMain({
   items: {
     title: string
     url: string
-    icon?: LucideIcon
+    icon: string
   }[]
 }) {
   return (
@@ -30,7 +28,8 @@ export function NavMain({
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild tooltip={item.title}>
                 <a href={item.url}>
-                  {item.icon && <item.icon />}
+                  {/* {item.icon && <item.icon />} */}
+                  <SafeDynamicIcon name={item.icon} />
                   <span>{item.title}</span>
                 </a>
               </SidebarMenuButton>

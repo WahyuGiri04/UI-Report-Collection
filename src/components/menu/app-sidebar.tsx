@@ -2,18 +2,14 @@
 
 import * as React from "react"
 import {
-  BarChartIcon,
   BookOpen,
   Bot,
   Command,
-  FolderIcon,
   HelpCircleIcon,
-  LayoutDashboardIcon,
   SearchIcon,
   Settings2,
   SettingsIcon,
   SquareTerminal,
-  UsersIcon,
 } from "lucide-react"
 
 import { NavMain } from "@/components/menu/nav-main"
@@ -41,22 +37,22 @@ const data = {
     {
       title: "Dashboard",
       url: "/dashboard/dashboard-default",
-      icon: LayoutDashboardIcon,
+      icon: "layout-dashboard",
     },
     {
       title: "Analytics",
       url: "/dashboard/dashboard-analytic",
-      icon: BarChartIcon,
+      icon: "chart-bar-big",
     },
     {
       title: "Projects",
       url: "/dashboard/dashboard-project",
-      icon: FolderIcon,
+      icon: "folder-archive",
     },
     {
       title: "Team",
       url: "/dashboard/dashboard-team",
-      icon: UsersIcon,
+      icon: "circle-user-round",
     },
   ],
   navSecondary: [
