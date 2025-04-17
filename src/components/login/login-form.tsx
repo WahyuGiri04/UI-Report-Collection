@@ -17,15 +17,15 @@ export function LoginForm({
                     <div className="flex flex-col items-center text-center">
                         <h1 className="text-2xl font-bold">Welcome back</h1>
                         <p className="text-balance text-muted-foreground">
-                        Login to your Acme Inc account
+                        Login to your Jalin account
                         </p>
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="email">Email</Label>
+                        <Label htmlFor="username">Username</Label>
                         <Input
-                        id="email"
-                        type="email"
-                        placeholder="m@example.com"
+                        id="username"
+                        type="text"
+                        placeholder="admin"
                         required
                         />
                     </div>
@@ -51,7 +51,7 @@ export function LoginForm({
                     <img
                         src="/images/login-hero.svg"
                         alt="Image"
-                        className="max-w-full max-h-full dark:brightness-[0.2] dark:grayscale object-contain"
+                        className="max-w-full max-h-full dark:brightness-[0.8] object-contain"
                     />
                 </div>
             </div>
