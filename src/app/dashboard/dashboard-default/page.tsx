@@ -1,6 +1,6 @@
 import { AnimatedWave } from "@/components/animate/aminasi"
 import { FooterBg } from "@/components/animate/footer-bg"
-import { AppSidebar } from "@/components/app-sidebar"
+import { AppSidebar } from "@/components/menu/app-sidebar"
 import { Header } from "@/components/header/header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 

@@ -5,17 +5,10 @@ import {
   BarChartIcon,
   BookOpen,
   Bot,
-  CameraIcon,
-  ClipboardListIcon,
   Command,
-  DatabaseIcon,
-  FileCodeIcon,
-  FileIcon,
-  FileTextIcon,
   FolderIcon,
   HelpCircleIcon,
   LayoutDashboardIcon,
-  ListIcon,
   SearchIcon,
   Settings2,
   SettingsIcon,
@@ -23,9 +16,9 @@ import {
   UsersIcon,
 } from "lucide-react"
 
-import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
-import { NavUser } from "@/components/nav-user"
+import { NavMain } from "@/components/menu/nav-main"
+import { NavSecondary } from "@/components/menu/nav-secondary"
+import { NavUser } from "@/components/menu/nav-user"
 import {
   Sidebar,
   SidebarContent,
@@ -36,7 +29,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { NavMenu } from "./nav-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 
 const data = {
   user: {
@@ -47,76 +40,23 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/dashboard/dashboard-default",
       icon: LayoutDashboardIcon,
     },
     {
-      title: "Lifecycle",
-      url: "#",
-      icon: ListIcon,
-    },
-    {
       title: "Analytics",
-      url: "#",
+      url: "/dashboard/dashboard-analytic",
       icon: BarChartIcon,
     },
     {
       title: "Projects",
-      url: "#",
+      url: "/dashboard/dashboard-project",
       icon: FolderIcon,
     },
     {
       title: "Team",
-      url: "#",
+      url: "/dashboard/dashboard-team",
       icon: UsersIcon,
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: CameraIcon,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: FileTextIcon,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: FileCodeIcon,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
     },
   ],
   navSecondary: [
@@ -134,23 +74,6 @@ const data = {
       title: "Search",
       url: "#",
       icon: SearchIcon,
-    },
-  ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-      icon: DatabaseIcon,
-    },
-    {
-      name: "Reports",
-      url: "#",
-      icon: ClipboardListIcon,
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: FileIcon,
     },
   ],
   navMenu: [

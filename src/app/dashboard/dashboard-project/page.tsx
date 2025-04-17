@@ -1,4 +1,4 @@
-import { AppSidebar } from "@/components/app-sidebar"
+import { AppSidebar } from "@/components/menu/app-sidebar"
 import { Header } from "@/components/header/header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 
@@ -15,7 +15,7 @@ export default function Page() {
                 <div key={i} className="aspect-square rounded-md bg-muted/50" />
               ))}
             </div>
-            </div>
+          </div>
         </div>
       </SidebarInset>
     </SidebarProvider>
