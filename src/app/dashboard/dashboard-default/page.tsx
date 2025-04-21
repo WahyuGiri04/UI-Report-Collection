@@ -7,6 +7,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 export default function Page() {
   return (
     <SidebarProvider>
+      {/* <AppSidebar variant="floating" /> */}
       <AppSidebar variant="inset" />
       <SidebarInset>
         <Header/>
