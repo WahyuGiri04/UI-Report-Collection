@@ -17,6 +17,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
+import { SafeDynamicIcon } from "../util/safe-dynamic-icon"
 
 export function NavMenu({
   items,
@@ -24,7 +25,7 @@ export function NavMenu({
   items: {
     title: string
     url: string
-    icon?: LucideIcon
+    icon?: string
     isActive?: boolean
     items?: {
       title: string
@@ -46,7 +47,8 @@ export function NavMenu({
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
                 <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
+                  <SafeDynamicIcon name={item.icon} />
+                  {/* {item.icon && <item.icon />} */}
                   <span>{item.title}</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>

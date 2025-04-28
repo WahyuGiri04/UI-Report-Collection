@@ -59,25 +59,25 @@ const data = {
     {
       title: "Settings",
       url: "#",
-      icon: SettingsIcon,
+      icon: "settings",
     },
     {
       title: "Get Help",
       url: "#",
-      icon: HelpCircleIcon,
+      icon: "info",
     },
     {
       title: "Search",
       url: "#",
-      icon: SearchIcon,
+      icon: "search",
     },
   ],
   navMenu: [
     {
       title: "Playground",
       url: "#",
-      icon: SquareTerminal,
-      isActive: true,
+      icon: "square-terminal",
+      // isActive: true,
       items: [
         {
           title: "History",
@@ -96,7 +96,7 @@ const data = {
     {
       title: "Models",
       url: "#",
-      icon: Bot,
+      icon: "bot",
       items: [
         {
           title: "Genesis",
@@ -115,7 +115,7 @@ const data = {
     {
       title: "Documentation",
       url: "#",
-      icon: BookOpen,
+      icon: "book-open",
       items: [
         {
           title: "Introduction",
@@ -138,7 +138,7 @@ const data = {
     {
       title: "Settings",
       url: "#",
-      icon: Settings2,
+      icon: "settings-2",
       items: [
         {
           title: "General",

@@ -1,8 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { LucideIcon } from "lucide-react"
-
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -10,6 +8,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { SafeDynamicIcon } from "../util/safe-dynamic-icon"
 
 export function NavSecondary({
   items,
@@ -18,7 +17,7 @@ export function NavSecondary({
   items: {
     title: string
     url: string
-    icon: LucideIcon
+    icon: string
   }[]
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
   return (
@@ -29,7 +28,8 @@ export function NavSecondary({
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild>
                 <a href={item.url}>
-                  <item.icon />
+                  {/* <item.icon /> */}
+                  <SafeDynamicIcon name={item.icon} />
                   <span>{item.title}</span>
                 </a>
               </SidebarMenuButton>
