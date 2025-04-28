@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/sidebar"
 import { format } from "date-fns"
 import { useTheme } from "next-themes"
+import Cookies from "js-cookie"
 
 const data = [
   [
@@ -52,7 +53,7 @@ export function NavbarRight() {
   }
 
   const handleClickOutside = () => {
-    console.log("click outside")
+    Cookies.remove("token");
   }
 
   return (
