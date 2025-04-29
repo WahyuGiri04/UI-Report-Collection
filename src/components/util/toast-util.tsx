@@ -11,7 +11,7 @@ export const ToastError = (message : string) => {
     })
 }
 
-export const ToastSucces = (message : string) => {
+export const ToastSuccess = (message : string) => {
     toast.success(message, {
         style : {
             background: "green",

@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { useState } from "react"
 import { Loader2 } from "lucide-react"
 import { Login } from "@/lib/service/login/login-service"
-import { ToastError, ToastSucces } from "../util/toast-util"
+import { ToastError, ToastSuccess } from "../util/toast-util"
 import Cookies from "js-cookie"
 import { useRouter } from "next/navigation"
 
@@ -29,7 +29,7 @@ export function LoginForm({
     const response = await Login({username, password})
 
     if(response.statusCode === 200){
-      ToastSucces(response.message)
+      ToastSuccess(response.message)
       if(response.data?.token){
         Cookies.set("token", response.data.token, {
           expires: 1,
