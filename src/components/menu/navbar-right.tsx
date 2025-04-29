@@ -27,6 +27,7 @@ import {
 import { format } from "date-fns"
 import { useTheme } from "next-themes"
 import Cookies from "js-cookie"
+import { useState } from "react"
 
 const data = [
   [
@@ -42,9 +43,9 @@ export function NavbarRight() {
   const { setTheme } = useTheme()
   const [isDark, setIsDark] = React.useState(false)
   const [isOpen, setIsOpen] = React.useState(false)
-  const now = new Date();
-  const formattedDate = format(now, "dd MMM yyyy")
+  const [now, setNow] = useState<Date | null>(null)
   React.useEffect(() => {
+    setNow(new Date())
     setIsOpen(false)
   }, [])
   const toggleTheme = () => {
@@ -59,7 +60,7 @@ export function NavbarRight() {
   return (
     <div className="flex items-center gap-2 text-sm">
       <div className="hidden font-medium text-muted-foreground md:inline-block">
-        {formattedDate}
+        {now ? format(now, "dd MMM yyyy") : "Loading..."}
       </div>
       <Button onClick={toggleTheme} variant="ghost" className="rounded-full" size="icon">
           <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />

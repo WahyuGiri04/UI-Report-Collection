@@ -2,14 +2,7 @@
 
 import * as React from "react"
 import {
-  BookOpen,
-  Bot,
   Command,
-  HelpCircleIcon,
-  SearchIcon,
-  Settings2,
-  SettingsIcon,
-  SquareTerminal,
 } from "lucide-react"
 
 import { NavMain } from "@/components/menu/nav-main"
@@ -25,7 +18,11 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { NavMenu } from "./nav-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
+import { useState, useEffect } from "react"
+import { Menu } from "@/lib/model/Menu"
+import { GetMenu } from "@/lib/service/menu-service"
+import { Users } from "@/lib/model/Users"
+import { GetUsersDetail } from "@/lib/service/users-service"
 
 const data = {
   user: {
@@ -33,28 +30,6 @@ const data = {
     email: "m@example.com",
     avatar: "/images/vs-code.png",
   },
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/dashboard/dashboard-default",
-      icon: "layout-dashboard",
-    },
-    {
-      title: "Analytics",
-      url: "/dashboard/dashboard-analytic",
-      icon: "chart-bar-big",
-    },
-    {
-      title: "Projects",
-      url: "/dashboard/dashboard-project",
-      icon: "folder-archive",
-    },
-    {
-      title: "Team",
-      url: "/dashboard/dashboard-team",
-      icon: "circle-user-round",
-    },
-  ],
   navSecondary: [
     {
       title: "Settings",
@@ -72,96 +47,36 @@ const data = {
       icon: "search",
     },
   ],
-  navMenu: [
-    {
-      title: "Playground",
-      url: "#",
-      icon: "square-terminal",
-      // isActive: true,
-      items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: "bot",
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: "book-open",
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: "settings-2",
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
-  ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
+  const [menuDashboard, setMenuDashboard] = useState<Menu[] | null>(null)
+  const [mainMenu, setMainMenu] = useState<Menu[] | null>(null)
+  const [users, setUsers] = useState<Users |null>(null)
+
+  useEffect(() => {
+    async function getMenu() {
+      const res = await GetMenu()
+      if(res.data !== undefined){
+        const menuDashboard = res.data.filter((item : Menu) => item.menuType === 1)
+        const mainMenu = res.data.filter((item : Menu) => item.menuType === 2)
+        setMenuDashboard(menuDashboard)
+        setMainMenu(mainMenu)
+      } else {
+        setMainMenu(null)
+        setMenuDashboard(null)
+      }
+      const response = await GetUsersDetail()
+      if(response.data !== undefined){
+        setUsers(response.data)
+      } else {
+        setUsers(null)
+      }
+    }
+    getMenu()
+  }, [])
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -185,12 +100,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavMenu items={data.navMenu} />
+        <NavMain items={menuDashboard ?? []} />
+        <NavMenu items={mainMenu ?? []} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={users} />
       </SidebarFooter>
     </Sidebar>
   )

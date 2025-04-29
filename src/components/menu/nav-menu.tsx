@@ -18,48 +18,49 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import { SafeDynamicIcon } from "../util/safe-dynamic-icon"
+import { Menu } from "@/lib/model/Menu"
+import { useEffect, useState } from "react"
+import { SkeletonMenu } from "../util/skeleton-util"
 
-export function NavMenu({
-  items,
-}: {
-  items: {
-    title: string
-    url: string
-    icon?: string
-    isActive?: boolean
-    items?: {
-      title: string
-      url: string
-    }[]
-  }[]
-}) {
+export function NavMenu({ items } : { items : Menu[] }) {
+
+  const [isLoad, setIsLoad] = useState(true)
+
+  useEffect(() => {
+    if(items !== null){
+      setIsLoad(false)
+    }
+  }, [items])
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Main Menu</SidebarGroupLabel>
-      <SidebarMenu>
+      {isLoad ? ((<SkeletonMenu count={4} />)) : (
+        <SidebarMenu>
         {items.map((item) => (
           <Collapsible
-            key={item.title}
+            key={item.menuName}
             asChild
-            defaultOpen={item.isActive}
+            // defaultOpen={item.isActive}
             className="group/collapsible"
           >
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title}>
+                <SidebarMenuButton tooltip={item.menuName}>
                   <SafeDynamicIcon name={item.icon} />
                   {/* {item.icon && <item.icon />} */}
-                  <span>{item.title}</span>
+                  <span>{item.menuName}</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <SidebarMenuSub>
-                  {item.items?.map((subItem) => (
-                    <SidebarMenuSubItem key={subItem.title}>
+                  {item.subMenu?.map((subItem) => (
+                    <SidebarMenuSubItem key={subItem.subMenuName}>
                       <SidebarMenuSubButton asChild>
                         <a href={subItem.url}>
-                          <span>{subItem.title}</span>
+                          <SafeDynamicIcon name={subItem.icon} />
+                          <span>{subItem.subMenuName}</span>
                         </a>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
@@ -70,6 +71,7 @@ export function NavMenu({
           </Collapsible>
         ))}
       </SidebarMenu>
+      )}
     </SidebarGroup>
   )
 }
