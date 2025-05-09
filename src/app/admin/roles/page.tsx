@@ -70,14 +70,6 @@ export default function Page() {
     if (page !== totalPage) fetchPageData(totalPage, row);
   };
 
-  const handleEdit = (id: number) => {
-    console.log("Edit data for id : " + id);
-  };
-
-  const handleDelete = (id: number) => {
-    console.log("Hapus data for id : " + id);
-  };
-
   return (
     <SidebarProvider>
       <AppSidebar variant="floating" />
@@ -90,17 +82,9 @@ export default function Page() {
               <Search />
               Search
             </Button>
-            {/* <Button
-              className="ml-4 px-8"
-              variant="destructive"
-              onClick={onClickAdd}
-            >
-              <CirclePlus />
-              Add Roles
-            </Button> */}
-            <FormRoles />
+            <FormRoles title="Add Role" id={0} onSuccess={() => fetchPageData(page, row)} />
           </div>
-          <DataTable columns={columns(handleEdit, handleDelete)} data={data} />
+          <DataTable columns={columns(fetchPageData, page, row)} data={data} />
           <div className="flex items-center justify-between px-4 py-4">
             <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">
               Total Data {totalData}
