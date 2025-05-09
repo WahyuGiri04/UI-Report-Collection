@@ -12,4 +12,4 @@ export interface Employee {
     tempatLahir : string
     email : string
     departement : Departement | null
-}    
+}
