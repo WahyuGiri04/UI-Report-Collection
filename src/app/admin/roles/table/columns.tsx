@@ -6,7 +6,8 @@ import { FormRoles } from "../form/form";
 import { Alert } from "../alert/alert";
 
 export const columns = (
-  onReload: (page: number, row: number) => void,
+  onReload: (searchRoleName : string, page: number, row: number) => void,
+  searchRoleName: string,
   page: number,
   rowNumber: number
 ): ColumnDef<Roles>[] => [
@@ -40,9 +41,9 @@ export const columns = (
       header: () => <div className="text-center">Action</div>,
       cell: ({ row }) => (
         <div className="flex items-center justify-center space-x-2">
-          <FormRoles title="Edit Role" id={row.original.id!} onSuccess={() => { onReload(page, rowNumber); }} />
+          <FormRoles title="Edit Role" id={row.original.id!} onSuccess={() => { onReload(searchRoleName,page, rowNumber); }} />
           <div className="h-5 w-px bg-gray-300" />
-          <Alert id={row.original.id!} onSuccess={() => { onReload(page, rowNumber); }} />
+          <Alert id={row.original.id!} onSuccess={() => { onReload(searchRoleName, page, rowNumber); }} />
         </div>
       ),
     },

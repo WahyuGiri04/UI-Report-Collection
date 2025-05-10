@@ -16,6 +16,8 @@ import {
   ChevronsLeftIcon,
   ChevronsRightIcon,
   CirclePlus,
+  RotateCcw,
+  RotateCcwIcon,
   Search,
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
@@ -34,13 +36,14 @@ export default function Page() {
   const [totalPage, setTotalPage] = useState(0);
   const [row, setRow] = useState(10);
   const [page, setPage] = useState(1);
+  const [searchRoleName, setSearchRoleName] = useState("");
 
   useEffect(() => {
-    fetchPageData(page, row);
+    fetchPageData(searchRoleName, page, row);
   }, []);
 
-  const fetchPageData = async (pageNumber: number, rowPerPage: number) => {
-    const response = await GetRolesPage(pageNumber, rowPerPage);
+  const fetchPageData = async (roleName: string, pageNumber: number, rowPerPage: number) => {
+    const response = await GetRolesPage(roleName, pageNumber, rowPerPage);
     if (response.data !== undefined) {
       setTotalData(response.data?.totalData);
       setData(response.data?.content || []);
@@ -51,23 +54,33 @@ export default function Page() {
 
   const onChangeRow = async (value: number) => {
     setRow(value);
-    fetchPageData(1, value);
+    fetchPageData(searchRoleName, 1, value);
   };
 
   const goToFirstPage = () => {
-    if (page !== 1) fetchPageData(1, row);
+    if (page !== 1) fetchPageData(searchRoleName, 1, row);
   };
 
   const goToPrevPage = () => {
-    if (page > 1) fetchPageData(page - 1, row);
+    if (page > 1) fetchPageData(searchRoleName, page - 1, row);
   };
 
   const goToNextPage = () => {
-    if (page < totalPage) fetchPageData(page + 1, row);
+    if (page < totalPage) fetchPageData(searchRoleName, page + 1, row);
   };
 
   const goToLastPage = () => {
-    if (page !== totalPage) fetchPageData(totalPage, row);
+    if (page !== totalPage) fetchPageData(searchRoleName, totalPage, row);
+  };
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    fetchPageData(searchRoleName, page, row);
+  }
+
+  const handleReset = () => {
+    setSearchRoleName("");
+    fetchPageData("", page, row);
   };
 
   return (
@@ -77,14 +90,30 @@ export default function Page() {
         <Header />
         <div className="rounded-md w-full h-full p-4">
           <div className="flex items-center py-4">
-            <Input placeholder="Filter Role Name..." className="max-w-sm" />
-            <Button className="ml-4 px-8" variant="secondary">
-              <Search />
-              Search
+            <form onSubmit={handleSearch} className="flex items-center space-x-4">
+              <Input
+                placeholder="Filter Role Name..."
+                className="max-w-sm"
+                id="searchRoleName"
+                value={searchRoleName}
+                onChange={(e) => setSearchRoleName(e.target.value)}
+              />
+              <Button type="submit" variant="secondary" className="px-8">
+                <Search className="mr-2 h-4 w-4" />
+                Search
+              </Button>
+            </form>
+            <Button
+              variant="outline"
+              className="ml-2 flex items-center space-x-2 px-8"
+              onClick={handleReset}
+            >
+              <RotateCcwIcon />
+              Reset Filter
             </Button>
-            <FormRoles title="Add Role" id={0} onSuccess={() => fetchPageData(page, row)} />
+            <FormRoles title="Add Role" id={0} onSuccess={() => fetchPageData(searchRoleName, page, row)} />
           </div>
-          <DataTable columns={columns(fetchPageData, page, row)} data={data} />
+          <DataTable columns={columns(fetchPageData, searchRoleName, page, row)} data={data} />
           <div className="flex items-center justify-between px-4 py-4">
             <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">
               Total Data {totalData}

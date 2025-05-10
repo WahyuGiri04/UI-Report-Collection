@@ -18,12 +18,13 @@ export async function GetRoles(): Promise<BaseResponse<Roles[]>> {
 }
 
 export async function GetRolesPage(
+  roleName: string,
   page: number,
   pageSize: number
 ): Promise<BaseResponse<BaseResponsePage<Roles[]>>> {
   const token = GetToken();
   const response = await fetch(
-    `${API_BASE_URL}admin/roles/page?page=${page}&pageSize=${pageSize}`,
+    `${API_BASE_URL}admin/roles/search?roleName=${roleName}&page=${page}&pageSize=${pageSize}`,
     {
       method: "GET",
       headers: {
