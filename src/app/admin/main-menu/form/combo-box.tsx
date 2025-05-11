@@ -31,9 +31,6 @@ export function ComboboxMenuType({ value, onChange }: ComboboxDemoProps) {
     const [open, setOpen] = React.useState(false)
     const selectedItem = menuTypeValue.find((item) => item.value === value)
 
-    console.log("Value : ", value)
-    console.log("Selected Item:", selectedItem)
-
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -41,13 +38,13 @@ export function ComboboxMenuType({ value, onChange }: ComboboxDemoProps) {
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className=""
+                    className="w-[400px] justify-between"
                 >
                     {selectedItem ? selectedItem.label : "Select menu type..."}
                     <ChevronsUpDown className="opacity-50" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="p-0" id="menu-type">
+            <PopoverContent className="p-0 justify-end w-[400px]" id="menu-type">
                 <Command>
                     <CommandInput placeholder="Search menu type..." className="h-9" />
                     <CommandList>
