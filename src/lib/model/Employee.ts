@@ -1,4 +1,4 @@
-import { Departement } from "./Departement"
+import { Department } from "./Departement"
 
 export interface Employee {
     id : number
@@ -11,5 +11,5 @@ export interface Employee {
     tanggalLahir : string
     tempatLahir : string
     email : string
-    departement : Departement | null
+    department : Department | null
 }

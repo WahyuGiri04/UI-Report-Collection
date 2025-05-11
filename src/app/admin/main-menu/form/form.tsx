@@ -12,29 +12,33 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ToastError, ToastSuccess } from "@/components/util/toast-util";
-import { Roles } from "@/lib/model/Roles";
-import { AddRoles, GetRolesById, UpdateRoles } from "@/lib/service/roles-service";
+import { Menu } from "@/lib/model/Menu";
+import { AddMenu, GetMenuById, UpdateMenu } from "@/lib/service/menu-service";
 import { Loader2, PencilIcon, PlusCircleIcon, SaveIcon } from "lucide-react";
+import { Combo } from "next/font/google";
 import { useEffect, useState } from "react";
+import { ComboboxMenuType } from "./combo-box";
 
-export function FormRoles({ title, id, onSuccess }: { title: string; id: number; onSuccess?: () => void; }) {
+export function Form({ title, id, onSuccess }: { title: string; id: number; onSuccess?: () => void; }) {
 
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [roleName, setRoleName] = useState("");
-  const [roleIcon, setRoleIcon] = useState("");
-  const [roleDescription, setRoleDescription] = useState("");
+  const [menuName, setMenuName] = useState("");
+  const [menuIcon, setMenuIcon] = useState("");
+  const [menuTypeData, setMenuTypeData] = useState("");
+  const [url, setUrl] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const data: Roles = {
-      roleName: roleName,
-      icon: roleIcon,
-      description: roleDescription,
+    const data: Menu = {
+      menuName: menuName,
+      icon: menuIcon,
+      menuType: Number(menuTypeData),
+      url: url,
     };
     setIsLoading(true);
     if (id === 0) {
-      const response = await AddRoles(data);
+      const response = await AddMenu(data);
       if (response.statusCode === 200) {
         ToastSuccess(response.message)
         setIsLoading(false);
@@ -44,7 +48,7 @@ export function FormRoles({ title, id, onSuccess }: { title: string; id: number;
         setIsLoading(false);
       }
     } else {
-      const response = await UpdateRoles(data, id);
+      const response = await UpdateMenu(data, id);
       if (response.statusCode === 200) {
         ToastSuccess(response.message)
         setIsLoading(false);
@@ -64,13 +68,15 @@ export function FormRoles({ title, id, onSuccess }: { title: string; id: number;
   }
 
   const fetchData = async (id: number) => {
-    const response = await GetRolesById(id);
+    const response = await GetMenuById(id);
     if (response.data !== undefined) {
-      setRoleName(response.data.roleName);
-      setRoleIcon(response.data.icon);
-      setRoleDescription(response.data.description);
+      setMenuName(response.data.menuName);
+      setMenuIcon(response.data.icon);
+      setMenuTypeData(String(response.data.menuType));
+      setUrl(response.data.url);
     }
   };
+
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -101,21 +107,27 @@ export function FormRoles({ title, id, onSuccess }: { title: string; id: number;
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="role-name" className="text-right">
-                Role Name
+                Menu Name
               </Label>
-              <Input id="role-name" value={roleName} onChange={(e) => setRoleName(e.target.value)} required className="col-span-3" />
+              <Input id="role-name" value={menuName} onChange={(e) => setMenuName(e.target.value)} required className="col-span-3" />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="icon" className="text-right">
                 Icon
               </Label>
-              <Input id="icon" value={roleIcon} onChange={(e) => setRoleIcon(e.target.value)} className="col-span-3" />
+              <Input id="icon" value={menuIcon} onChange={(e) => setMenuIcon(e.target.value)} className="col-span-3" />
+            </div>
+            <div className="grid grid-cols-4 items-start gap-4">
+              <Label htmlFor="menu-type" className="text-right mt-2">
+                Menu Type
+              </Label>
+              <ComboboxMenuType value={menuTypeData} onChange={setMenuTypeData} />
             </div>
             <div className="grid grid-cols-4 items-start gap-4">
               <Label htmlFor="description" className="text-right mt-2">
-                Description
+                URL
               </Label>
-              <Textarea id="description" value={roleDescription} onChange={(e) => setRoleDescription(e.target.value)} required className="col-span-3" />
+              <Textarea id="description" value={url} onChange={(e) => setUrl(e.target.value)} required className="col-span-3" />
             </div>
           </div>
           <DialogFooter>

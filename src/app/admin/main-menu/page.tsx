@@ -2,9 +2,7 @@
 
 import { AppSidebar } from "@/components/menu/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { GetRolesPage } from "@/lib/service/roles-service";
 import { useEffect, useState } from "react";
-import { Roles } from "@/lib/model/Roles";
 import { Header } from "@/components/header/header";
 import { DataTable } from "./table/data-table";
 import { columns } from "./table/columns";
@@ -15,8 +13,6 @@ import {
   ChevronRightIcon,
   ChevronsLeftIcon,
   ChevronsRightIcon,
-  CirclePlus,
-  RotateCcw,
   RotateCcwIcon,
   Search,
 } from "lucide-react";
@@ -28,22 +24,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { FormRoles } from "./form/form";
+import { Menu } from "@/lib/model/Menu";
+import { GetMenuPage } from "@/lib/service/menu-service";
+import { ComboboxMenuType } from "./form/combo-box";
 
 export default function Page() {
-  const [data, setData] = useState<Roles[]>([]);
+  const [data, setData] = useState<Menu[]>([]);
   const [totalData, setTotalData] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const [row, setRow] = useState(10);
   const [page, setPage] = useState(1);
-  const [searchRoleName, setSearchRoleName] = useState("");
+  const [searchMenuName, setSearchMenuName] = useState("");
+  const [searchMenuType, setSearchMenuType] = useState("");
 
   useEffect(() => {
-    fetchPageData(searchRoleName, page, row);
+    fetchPageData(searchMenuName, searchMenuType, page, row);
   }, []);
 
-  const fetchPageData = async (roleName: string, pageNumber: number, rowPerPage: number) => {
-    const response = await GetRolesPage(roleName, pageNumber, rowPerPage);
+  const fetchPageData = async (menuName: string, menuType: string, pageNumber: number, rowPerPage: number) => {
+    const response = await GetMenuPage(menuName, menuType, pageNumber, rowPerPage);
     if (response.data !== undefined) {
       setTotalData(response.data?.totalData);
       setData(response.data?.content || []);
@@ -54,33 +53,34 @@ export default function Page() {
 
   const onChangeRow = async (value: number) => {
     setRow(value);
-    fetchPageData(searchRoleName, 1, value);
+    fetchPageData(searchMenuName, searchMenuType, 1, value);
   };
 
   const goToFirstPage = () => {
-    if (page !== 1) fetchPageData(searchRoleName, 1, row);
+    if (page !== 1) fetchPageData(searchMenuName, searchMenuType, 1, row);
   };
 
   const goToPrevPage = () => {
-    if (page > 1) fetchPageData(searchRoleName, page - 1, row);
+    if (page > 1) fetchPageData(searchMenuName, searchMenuType, page - 1, row);
   };
 
   const goToNextPage = () => {
-    if (page < totalPage) fetchPageData(searchRoleName, page + 1, row);
+    if (page < totalPage) fetchPageData(searchMenuName, searchMenuType, page + 1, row);
   };
 
   const goToLastPage = () => {
-    if (page !== totalPage) fetchPageData(searchRoleName, totalPage, row);
+    if (page !== totalPage) fetchPageData(searchMenuName, searchMenuType, totalPage, row);
   };
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    fetchPageData(searchRoleName, page, row);
+    fetchPageData(searchMenuName, searchMenuType, page, row);
   }
 
   const handleReset = () => {
-    setSearchRoleName("");
-    fetchPageData("", page, row);
+    setSearchMenuName("");
+    setSearchMenuType("");
+    fetchPageData("", "", page, row);
   };
 
   return (
@@ -93,18 +93,18 @@ export default function Page() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0">
               <form onSubmit={handleSearch} className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0">
                 <Input
-                  placeholder="Filter Role Name..."
+                  placeholder="Filter Main Menu Name..."
                   className="max-w-sm w-lg"
                   id="searchRoleName"
-                  value={searchRoleName}
-                  onChange={(e) => setSearchRoleName(e.target.value)}
+                  value={searchMenuName}
+                  onChange={(e) => setSearchMenuName(e.target.value)}
                 />
+                <ComboboxMenuType value={searchMenuType} onChange={setSearchMenuType} />
                 <Button type="submit" variant="secondary" className="px-8">
                   <Search className="mr-2 h-4 w-4" />
                   Search
                 </Button>
               </form>
-
               <Button
                 variant="outline"
                 className="flex items-center space-x-2 px-8"
@@ -113,10 +113,10 @@ export default function Page() {
                 <RotateCcwIcon />
                 Reset Filter
               </Button>
-              <FormRoles title="Add Role" id={0} onSuccess={() => fetchPageData(searchRoleName, page, row)} />
+              {/* <Form title="Add Main Menu" id={0} onSuccess={() => fetchPageData(searchMenuName, searchMenuType, page, row)} /> */}
             </div>
           </div>
-          <DataTable columns={columns(fetchPageData, searchRoleName, page, row)} data={data} />
+          <DataTable columns={columns(fetchPageData, searchMenuName, searchMenuType, page, row)} data={data} />
           <div className="flex items-center justify-between px-4 py-4">
             <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">
               Total Data {totalData}

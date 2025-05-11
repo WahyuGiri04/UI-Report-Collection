@@ -12,29 +12,27 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ToastError, ToastSuccess } from "@/components/util/toast-util";
-import { Roles } from "@/lib/model/Roles";
-import { AddRoles, GetRolesById, UpdateRoles } from "@/lib/service/roles-service";
+import { Department } from "@/lib/model/Departement";
+import { AddDepartments, GetDepartmentsById, UpdateDepartments } from "@/lib/service/department-service";
 import { Loader2, PencilIcon, PlusCircleIcon, SaveIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export function FormRoles({ title, id, onSuccess }: { title: string; id: number; onSuccess?: () => void; }) {
+export function FormDepartment({ title, id, onSuccess }: { title: string; id: number; onSuccess?: () => void; }) {
 
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [roleName, setRoleName] = useState("");
-  const [roleIcon, setRoleIcon] = useState("");
-  const [roleDescription, setRoleDescription] = useState("");
+  const [departmentName, setDepartmentName] = useState("");
+  const [departmentDescription, setDepartmentDescription] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const data: Roles = {
-      roleName: roleName,
-      icon: roleIcon,
-      description: roleDescription,
+    const data: Department = {
+      departmentName: departmentName,
+      description: departmentDescription,
     };
     setIsLoading(true);
     if (id === 0) {
-      const response = await AddRoles(data);
+      const response = await AddDepartments(data);
       if (response.statusCode === 200) {
         ToastSuccess(response.message)
         setIsLoading(false);
@@ -44,7 +42,7 @@ export function FormRoles({ title, id, onSuccess }: { title: string; id: number;
         setIsLoading(false);
       }
     } else {
-      const response = await UpdateRoles(data, id);
+      const response = await UpdateDepartments(data, id);
       if (response.statusCode === 200) {
         ToastSuccess(response.message)
         setIsLoading(false);
@@ -64,11 +62,10 @@ export function FormRoles({ title, id, onSuccess }: { title: string; id: number;
   }
 
   const fetchData = async (id: number) => {
-    const response = await GetRolesById(id);
+    const response = await GetDepartmentsById(id);
     if (response.data !== undefined) {
-      setRoleName(response.data.roleName);
-      setRoleIcon(response.data.icon);
-      setRoleDescription(response.data.description);
+      setDepartmentName(response.data.departmentName);
+      setDepartmentDescription(response.data.description);
     }
   };
 
@@ -94,28 +91,22 @@ export function FormRoles({ title, id, onSuccess }: { title: string; id: number;
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>
-            Data Parameter Roles
+            Data Parameter Department
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="role-name" className="text-right">
-                Role Name
+              <Label htmlFor="department-name" className="text-right">
+                Department Name
               </Label>
-              <Input id="role-name" value={roleName} onChange={(e) => setRoleName(e.target.value)} required className="col-span-3" />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="icon" className="text-right">
-                Icon
-              </Label>
-              <Input id="icon" value={roleIcon} onChange={(e) => setRoleIcon(e.target.value)} className="col-span-3" />
+              <Input id="department-name" value={departmentName} onChange={(e) => setDepartmentName(e.target.value)} required className="col-span-3" />
             </div>
             <div className="grid grid-cols-4 items-start gap-4">
               <Label htmlFor="description" className="text-right mt-2">
                 Description
               </Label>
-              <Textarea id="description" value={roleDescription} onChange={(e) => setRoleDescription(e.target.value)} required className="col-span-3" />
+              <Textarea id="description" value={departmentDescription} onChange={(e) => setDepartmentDescription(e.target.value)} required className="col-span-3" />
             </div>
           </div>
           <DialogFooter>
