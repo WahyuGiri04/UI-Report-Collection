@@ -1,15 +1,17 @@
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { SafeDynamicIcon } from "@/components/util/safe-dynamic-icon";
-import { Roles } from "@/lib/model/Roles";
 import { ColumnDef } from "@tanstack/react-table";
-import { FormRoles } from "../form/form";
 import { Alert } from "../alert/alert";
+import { PencilIcon } from "lucide-react";
+import { Roles } from "@/lib/model/Roles";
 
 export const columns = (
-  onReload: (searchRoleName : string, page: number, row: number) => void,
+  onReload: (searchRoleName: string, page: number, row: number) => void,
   searchRoleName: string,
   page: number,
-  rowNumber: number
+  rowNumber: number,
+  onEditClick: (id: number) => void
 ): ColumnDef<Roles>[] => [
     {
       header: " ",
@@ -41,7 +43,14 @@ export const columns = (
       header: () => <div className="text-center">Action</div>,
       cell: ({ row }) => (
         <div className="flex items-center justify-center space-x-2">
-          <FormRoles title="Edit Role" id={row.original.id!} onSuccess={() => { onReload(searchRoleName,page, rowNumber); }} />
+          <Button
+            variant="ghost"
+            className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
+            size="sm"
+            onClick={() => onEditClick(row.original.id!)}
+          >
+            <PencilIcon className="h-4 w-4" />
+          </Button>
           <div className="h-5 w-px bg-gray-300" />
           <Alert id={row.original.id!} onSuccess={() => { onReload(searchRoleName, page, rowNumber); }} />
         </div>

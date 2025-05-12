@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { ToastError, ToastSuccess } from "@/components/util/toast-util";
+import { DeleteMenu } from "@/lib/service/menu-service";
 import { DeleteRoles } from "@/lib/service/roles-service";
 import { Trash2Icon } from "lucide-react"
 

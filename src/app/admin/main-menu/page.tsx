@@ -13,8 +13,10 @@ import {
   ChevronRightIcon,
   ChevronsLeftIcon,
   ChevronsRightIcon,
+  ChevronsUpDown,
   RotateCcwIcon,
   Search,
+  SearchIcon,
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import {
@@ -30,6 +32,8 @@ import { ComboboxMenuType } from "./form/combo-box";
 import { Form } from "./form/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 export default function Page() {
   const [data, setData] = useState<Menu[]>([]);
@@ -42,6 +46,7 @@ export default function Page() {
   const [editId, setEditId] = useState(0);
   const [activeTab, setActiveTab] = useState("data-table");
   const tabsRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
     fetchPageData(searchMenuName, searchMenuType, page, row);
@@ -92,19 +97,6 @@ export default function Page() {
   const handleEditClick = (id: number) => {
     setEditId(id);
     setActiveTab("form-data");
-    // Find TabsTrigger for form-data and click it
-    if (tabsRef.current) {
-      const formTabTrigger = tabsRef.current.querySelector('[value="form-data"]') as HTMLButtonElement;
-      if (formTabTrigger) {
-        formTabTrigger.click();
-      }
-    }
-  };
-
-  const handleAddNewClick = () => {
-    setEditId(0);
-    setActiveTab("form-data");
-    // Find TabsTrigger for form-data and click it
     if (tabsRef.current) {
       const formTabTrigger = tabsRef.current.querySelector('[value="form-data"]') as HTMLButtonElement;
       if (formTabTrigger) {
@@ -122,8 +114,8 @@ export default function Page() {
 
   const handleFormSuccess = () => {
     fetchPageData(searchMenuName, searchMenuType, page, row);
-    // Optional: switch back to data-table tab after successful form submission
     setActiveTab("data-table");
+    setEditId(0);
     if (tabsRef.current) {
       const dataTableTab = tabsRef.current.querySelector('[value="data-table"]') as HTMLButtonElement;
       if (dataTableTab) {
@@ -139,7 +131,7 @@ export default function Page() {
         <Header />
         <div className="rounded-md w-full h-full p-4">
           <Tabs value={activeTab} onValueChange={handleTabChange} ref={tabsRef}>
-            <TabsList className="grid w-[400px] grid-cols-2">
+            <TabsList className="grid w-full sm:w-[400px] grid-cols-2">
               <TabsTrigger value="data-table">Data Table</TabsTrigger>
               <TabsTrigger value="form-data">
                 {editId === 0 ? "Add Menu" : "Edit Menu"}
@@ -148,43 +140,61 @@ export default function Page() {
             <TabsContent value="data-table">
               <Card>
                 <CardContent className="space-y-2">
-                  <div className="flex items-center py-4">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0">
-                      <form onSubmit={handleSearch} className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0">
-                        <Input
-                          placeholder="Filter Main Menu Name..."
-                          className="max-w-sm w-lg"
-                          id="searchRoleName"
-                          value={searchMenuName}
-                          onChange={(e) => setSearchMenuName(e.target.value)}
-                        />
-                        <ComboboxMenuType value={searchMenuType} onChange={setSearchMenuType} />
-                        <Button type="submit" variant="secondary" className="px-8">
-                          <Search className="mr-2 h-4 w-4" />
-                          Search
+                  <Collapsible
+                    open={isOpen}
+                    onOpenChange={setIsOpen}
+                    className="w-full space-y-2"
+                  >
+                    <div className="flex items-center justify-between">
+                      <CollapsibleTrigger asChild>
+                        <Button variant="default" size="sm">
+                          <SearchIcon className="h-4 w-4" />
+                          Search Data
                         </Button>
-                      </form>
-                      <Button
-                        variant="outline"
-                        className="flex items-center space-x-2 px-8"
-                        onClick={handleReset}
-                      >
-                        <RotateCcwIcon />
-                        Reset Filter
-                      </Button>
+                      </CollapsibleTrigger>
                     </div>
+                    <CollapsibleContent className="">
+                      <div className="w-full items-center justify-between rounded-md bg p-4">
+                        <form onSubmit={handleSearch}>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 sm:w-[400px] gap-4 w-full">
+                            <Input
+                              placeholder="Filter Main Menu Name..."
+                              className="sm:w-full col-span-2"
+                              id="searchMenuName"
+                              value={searchMenuName}
+                              onChange={(e) => setSearchMenuName(e.target.value)}
+                            />
+                            <ComboboxMenuType value={searchMenuType} onChange={setSearchMenuType} />
+                            <Button type="submit" variant="secondary" className="px-8">
+                              <Search className="mr-2 w-full" />
+                              Search
+                            </Button>
+                            <Button
+                              variant="outline"
+                              className="px-8"
+                              onClick={handleReset}
+                            >
+                              <RotateCcwIcon />
+                              Reset Filter
+                            </Button>
+                          </div>
+                        </form>
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+                  <div className="py-4">
+                    <DataTable
+                      columns={columns(
+                        fetchPageData,
+                        searchMenuName,
+                        searchMenuType,
+                        page,
+                        row,
+                        handleEditClick
+                      )}
+                      data={data}
+                    />
                   </div>
-                  <DataTable
-                    columns={columns(
-                      fetchPageData,
-                      searchMenuName,
-                      searchMenuType,
-                      page,
-                      row,
-                      handleEditClick
-                    )}
-                    data={data}
-                  />
                   <div className="flex items-center justify-between px-4 py-4">
                     <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">
                       Total Data {totalData}

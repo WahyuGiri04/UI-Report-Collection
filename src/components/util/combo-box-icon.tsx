@@ -31,6 +31,7 @@ export function ComboboxIcon({ value, onChange }: ComboboxIconProps) {
   const [searchQuery, setSearchQuery] = React.useState("")
   const [visibleCount, setVisibleCount] = React.useState(20)
   const [isLoading, setIsLoading] = React.useState(false)
+  const buttonRef = React.useRef<HTMLButtonElement>(null)
 
   // Filter icons based on search query
   const filteredIcons = React.useMemo(() => {
@@ -57,10 +58,11 @@ export function ComboboxIcon({ value, onChange }: ComboboxIconProps) {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
+          ref={buttonRef}
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[400px] justify-between"
+          className="sm:w-full w-full justify-between col-span-2"
         >
           {value ? (
             <div className="flex items-center gap-2">
@@ -73,8 +75,12 @@ export function ComboboxIcon({ value, onChange }: ComboboxIconProps) {
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[400px] p-0">
-        <Command>
+      <PopoverContent
+        className="p-0"
+        align="start"
+        style={{ width: buttonRef.current?.offsetWidth }}
+      >
+        <Command className="w-full">
           <CommandInput
             placeholder="Search icons..."
             className="h-9"
@@ -83,7 +89,7 @@ export function ComboboxIcon({ value, onChange }: ComboboxIconProps) {
           />
           <CommandList>
             <CommandEmpty>No icon found.</CommandEmpty>
-            <CommandGroup className="max-h-[300px] overflow-auto">
+            <CommandGroup>
               {filteredIcons.map((icon) => (
                 <CommandItem
                   key={icon.value}

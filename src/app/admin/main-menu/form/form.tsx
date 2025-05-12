@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { ComboboxMenuType } from "./combo-box";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DialogFooter } from "@/components/ui/dialog";
-import { ComboboxIcon } from "./combo-box-icon";
+import { ComboboxIcon } from "../../../../components/util/combo-box-icon";
 
 export function Form({ title, id, onSuccess }: { title: string; id: number; onSuccess?: () => void; }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -19,16 +19,13 @@ export function Form({ title, id, onSuccess }: { title: string; id: number; onSu
   const [menuTypeData, setMenuTypeData] = useState("");
   const [url, setUrl] = useState("");
 
-  // Reset form when id changes (switching between add and edit)
   useEffect(() => {
     if (id === 0) {
-      // Reset form for new entry
       setMenuName("");
       setMenuIcon("");
       setMenuTypeData("");
       setUrl("");
     } else {
-      // Fetch data for edit
       fetchData(id);
     }
   }, [id]);
@@ -97,7 +94,7 @@ export function Form({ title, id, onSuccess }: { title: string; id: number; onSu
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="menu-name" className="text-right">
+              <Label htmlFor="menu-name" className="text-left sm:text-right">
                 Menu Name
               </Label>
               <Input
@@ -109,21 +106,23 @@ export function Form({ title, id, onSuccess }: { title: string; id: number; onSu
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="icon" className="text-right">
+              <Label htmlFor="icon" className="text-left sm:text-right">
                 Icon
               </Label>
               <div className="col-span-3">
                 <ComboboxIcon value={menuIcon} onChange={setMenuIcon} />
               </div>
             </div>
-            <div className="grid grid-cols-4 items-start gap-4">
-              <Label htmlFor="menu-type" className="text-right mt-2">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="menu-type" className="text-left sm:text-right">
                 Menu Type
               </Label>
-              <ComboboxMenuType value={menuTypeData} onChange={setMenuTypeData} />
+              <div className="col-span-3">
+                <ComboboxMenuType value={menuTypeData} onChange={setMenuTypeData} />
+              </div>
             </div>
-            <div className="grid grid-cols-4 items-start gap-4">
-              <Label htmlFor="url" className="text-right mt-2">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="url" className="text-left sm:text-right">
                 URL
               </Label>
               <Input

@@ -11,13 +11,13 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { ToastError, ToastSuccess } from "@/components/util/toast-util";
-import { DeleteRoles } from "@/lib/service/roles-service";
+import { DeleteMenu } from "@/lib/service/menu-service";
 import { Trash2Icon } from "lucide-react"
 
 export function Alert({ id, onSuccess }: { id: number; onSuccess?: () => void }) {
 
     const handleDelete = async () => {
-        const response = await DeleteRoles(id)
+        const response = await DeleteMenu(id)
         if (response.statusCode === 200) {
             ToastSuccess(response.message)
         } else {
