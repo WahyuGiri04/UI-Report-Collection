@@ -13,7 +13,6 @@ import {
   ChevronRightIcon,
   ChevronsLeftIcon,
   ChevronsRightIcon,
-  ChevronsUpDown,
   RotateCcwIcon,
   Search,
   SearchIcon,
@@ -26,16 +25,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Menu } from "@/lib/model/Menu";
-import { GetMenuPage } from "@/lib/service/menu-service";
-import { ComboboxMenuType } from "./form/combo-box";
 import { Form } from "./form/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { GetSubMenuPage } from "@/lib/service/sub-menu-service";
 import { SubMenu } from "@/lib/model/SubMenu";
+import { ComboboxMainMenu } from "./form/combo-box-main-menu";
 
 export default function Page() {
   const [data, setData] = useState<SubMenu[]>([]);
@@ -43,19 +43,29 @@ export default function Page() {
   const [totalPage, setTotalPage] = useState(0);
   const [row, setRow] = useState(10);
   const [page, setPage] = useState(1);
-  const [searchMenuName, setSearchMenuName] = useState("");
-  const [searchMenuType, setSearchMenuType] = useState("");
+  const [searchSubMenuName, setSearchSubMenuName] = useState("");
+  const [searchMainMenuId, setSearchMainMenuId] = useState("");
   const [editId, setEditId] = useState(0);
   const [activeTab, setActiveTab] = useState("data-table");
   const tabsRef = useRef<HTMLDivElement>(null);
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    fetchPageData(searchMenuName, searchMenuType, page, row);
+    fetchPageData(searchSubMenuName, searchMainMenuId, page, row);
   }, []);
 
-  const fetchPageData = async (menuName: string, menuType: string, pageNumber: number, rowPerPage: number) => {
-    const response = await GetSubMenuPage(menuName, 0, pageNumber, rowPerPage);
+  const fetchPageData = async (
+    subMenuName: string,
+    mainMenuId: string,
+    pageNumber: number,
+    rowPerPage: number
+  ) => {
+    const response = await GetSubMenuPage(
+      subMenuName,
+      Number(mainMenuId),
+      pageNumber,
+      rowPerPage
+    );
     if (response.data !== undefined) {
       setTotalData(response.data?.totalData);
       setData(response.data?.content || []);
@@ -66,33 +76,36 @@ export default function Page() {
 
   const onChangeRow = async (value: number) => {
     setRow(value);
-    fetchPageData(searchMenuName, searchMenuType, 1, value);
+    fetchPageData(searchSubMenuName, searchMainMenuId, 1, value);
   };
 
   const goToFirstPage = () => {
-    if (page !== 1) fetchPageData(searchMenuName, searchMenuType, 1, row);
+    if (page !== 1) fetchPageData(searchSubMenuName, searchMainMenuId, 1, row);
   };
 
   const goToPrevPage = () => {
-    if (page > 1) fetchPageData(searchMenuName, searchMenuType, page - 1, row);
+    if (page > 1)
+      fetchPageData(searchSubMenuName, searchMainMenuId, page - 1, row);
   };
 
   const goToNextPage = () => {
-    if (page < totalPage) fetchPageData(searchMenuName, searchMenuType, page + 1, row);
+    if (page < totalPage)
+      fetchPageData(searchSubMenuName, searchMainMenuId, page + 1, row);
   };
 
   const goToLastPage = () => {
-    if (page !== totalPage) fetchPageData(searchMenuName, searchMenuType, totalPage, row);
+    if (page !== totalPage)
+      fetchPageData(searchSubMenuName, searchMainMenuId, totalPage, row);
   };
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    fetchPageData(searchMenuName, searchMenuType, page, row);
-  }
+    fetchPageData(searchSubMenuName, searchMainMenuId, page, row);
+  };
 
   const handleReset = () => {
-    setSearchMenuName("");
-    setSearchMenuType("");
+    setSearchSubMenuName("");
+    setSearchMainMenuId("");
     fetchPageData("", "", page, row);
   };
 
@@ -100,7 +113,9 @@ export default function Page() {
     setEditId(id);
     setActiveTab("form-data");
     if (tabsRef.current) {
-      const formTabTrigger = tabsRef.current.querySelector('[value="form-data"]') as HTMLButtonElement;
+      const formTabTrigger = tabsRef.current.querySelector(
+        '[value="form-data"]'
+      ) as HTMLButtonElement;
       if (formTabTrigger) {
         formTabTrigger.click();
       }
@@ -115,18 +130,18 @@ export default function Page() {
   };
 
   const handleFormSuccess = () => {
-    fetchPageData(searchMenuName, searchMenuType, page, row);
+    fetchPageData(searchSubMenuName, searchMainMenuId, page, row);
     setActiveTab("data-table");
     setEditId(0);
     if (tabsRef.current) {
-      const dataTableTab = tabsRef.current.querySelector('[value="data-table"]') as HTMLButtonElement;
+      const dataTableTab = tabsRef.current.querySelector(
+        '[value="data-table"]'
+      ) as HTMLButtonElement;
       if (dataTableTab) {
         dataTableTab.click();
       }
     }
   };
-
-  console.log(data[0]?.mainMenuId?.icon);
 
   return (
     <SidebarProvider>
@@ -138,7 +153,7 @@ export default function Page() {
             <TabsList className="grid w-full sm:w-[400px] grid-cols-2">
               <TabsTrigger value="data-table">Data Table</TabsTrigger>
               <TabsTrigger value="form-data">
-                {editId === 0 ? "Add Menu" : "Edit Menu"}
+                {editId === 0 ? "Add Sub Menu" : "Edit Sub Menu"}
               </TabsTrigger>
             </TabsList>
             <TabsContent value="data-table">
@@ -164,12 +179,21 @@ export default function Page() {
                             <Input
                               placeholder="Filter Main Menu Name..."
                               className="sm:w-full col-span-2"
-                              id="searchMenuName"
-                              value={searchMenuName}
-                              onChange={(e) => setSearchMenuName(e.target.value)}
+                              id="searchSubMenuName"
+                              value={searchSubMenuName}
+                              onChange={(e) =>
+                                setSearchSubMenuName(e.target.value)
+                              }
                             />
-                            <ComboboxMenuType value={searchMenuType} onChange={setSearchMenuType} />
-                            <Button type="submit" variant="secondary" className="px-8">
+                            <ComboboxMainMenu
+                              value={searchMainMenuId}
+                              onChange={setSearchMainMenuId}
+                            />
+                            <Button
+                              type="submit"
+                              variant="secondary"
+                              className="px-8"
+                            >
                               <Search className="mr-2 w-full" />
                               Search
                             </Button>
@@ -190,8 +214,8 @@ export default function Page() {
                     <DataTable
                       columns={columns(
                         fetchPageData,
-                        searchMenuName,
-                        searchMenuType,
+                        searchSubMenuName,
+                        searchMainMenuId,
                         page,
                         row,
                         handleEditClick
@@ -205,7 +229,10 @@ export default function Page() {
                     </div>
                     <div className="flex w-full items-center gap-8 lg:w-fit">
                       <div className="hidden items-center gap-2 lg:flex">
-                        <Label htmlFor="rows-per-page" className="text-sm font-medium">
+                        <Label
+                          htmlFor="rows-per-page"
+                          className="text-sm font-medium"
+                        >
                           Rows per page
                         </Label>
                         <Select
@@ -277,7 +304,7 @@ export default function Page() {
             <TabsContent value="form-data">
               <Card>
                 <Form
-                  title={editId === 0 ? "Add Main Menu" : "Edit Main Menu"}
+                  title={editId === 0 ? "Add Sub Menu" : "Edit Sub Menu"}
                   id={editId}
                   onSuccess={handleFormSuccess}
                 />

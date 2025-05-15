@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Check, ChevronsUpDown, Loader2 } from "lucide-react"
+import * as React from "react";
+import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -12,14 +12,14 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { lucideIconProp } from "@/lib/const/lucide-icon"
-import { SafeDynamicIcon } from "@/components/util/safe-dynamic-icon"
+} from "@/components/ui/popover";
+import { lucideIconProp } from "@/lib/const/lucide-icon";
+import { SafeDynamicIcon } from "@/components/util/safe-dynamic-icon";
 
 interface ComboboxIconProps {
   value: string;
@@ -27,32 +27,33 @@ interface ComboboxIconProps {
 }
 
 export function ComboboxIcon({ value, onChange }: ComboboxIconProps) {
-  const [open, setOpen] = React.useState(false)
-  const [searchQuery, setSearchQuery] = React.useState("")
-  const [visibleCount, setVisibleCount] = React.useState(20)
-  const [isLoading, setIsLoading] = React.useState(false)
-  const buttonRef = React.useRef<HTMLButtonElement>(null)
+  const [open, setOpen] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [visibleCount, setVisibleCount] = React.useState(10);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const buttonRef = React.useRef<HTMLButtonElement>(null);
 
   // Filter icons based on search query
   const filteredIcons = React.useMemo(() => {
-    if (!searchQuery) return lucideIconProp.slice(0, visibleCount)
+    if (!searchQuery) return lucideIconProp.slice(0, visibleCount);
 
-    return lucideIconProp.filter(icon =>
-      icon.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      icon.value.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-  }, [searchQuery, visibleCount])
+    return lucideIconProp.filter(
+      (icon) =>
+        icon.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        icon.value.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery, visibleCount]);
 
   // Handle loading more icons
   const handleLoadMore = () => {
-    setIsLoading(true)
+    setIsLoading(true);
 
     // Simulate loading delay
     setTimeout(() => {
-      setVisibleCount(prev => Math.min(prev + 20, lucideIconProp.length))
-      setIsLoading(false)
-    }, 300)
-  }
+      setVisibleCount((prev) => Math.min(prev + 10, lucideIconProp.length));
+      setIsLoading(false);
+    }, 300);
+  };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -95,8 +96,8 @@ export function ComboboxIcon({ value, onChange }: ComboboxIconProps) {
                   key={icon.value}
                   value={icon.value}
                   onSelect={(currentValue) => {
-                    onChange(currentValue === value ? "" : currentValue)
-                    setOpen(false)
+                    onChange(currentValue === value ? "" : currentValue);
+                    setOpen(false);
                   }}
                 >
                   <div className="flex items-center gap-2">
@@ -113,7 +114,8 @@ export function ComboboxIcon({ value, onChange }: ComboboxIconProps) {
               ))}
             </CommandGroup>
             {!searchQuery && visibleCount < lucideIconProp.length && (
-              <div className="py-2 px-2 text-center border-t">
+              // <div className="py-2 px-2 text-center border-t">
+              <div className="p-2 flex justify-center">
                 <Button
                   variant="ghost"
                   className="w-full text-sm"
@@ -135,5 +137,5 @@ export function ComboboxIcon({ value, onChange }: ComboboxIconProps) {
         </Command>
       </PopoverContent>
     </Popover>
-  )
+  );
 }

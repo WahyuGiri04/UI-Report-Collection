@@ -7,12 +7,20 @@ import { Menu } from "@/lib/model/Menu";
 import { AddMenu, GetMenuById, UpdateMenu } from "@/lib/service/menu-service";
 import { Loader2, SaveIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { ComboboxMenuType } from "./combo-box";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DialogFooter } from "@/components/ui/dialog";
 import { ComboboxIcon } from "../../../../components/util/combo-box-icon";
+import { ComboboxMenuType } from "@/components/util/combo-box-menu-type";
 
-export function Form({ title, id, onSuccess }: { title: string; id: number; onSuccess?: () => void; }) {
+export function Form({
+  title,
+  id,
+  onSuccess,
+}: {
+  title: string;
+  id: number;
+  onSuccess?: () => void;
+}) {
   const [isLoading, setIsLoading] = useState(false);
   const [menuName, setMenuName] = useState("");
   const [menuIcon, setMenuIcon] = useState("");
@@ -42,23 +50,23 @@ export function Form({ title, id, onSuccess }: { title: string; id: number; onSu
     if (id === 0) {
       const response = await AddMenu(data);
       if (response.statusCode === 200) {
-        ToastSuccess(response.message)
+        ToastSuccess(response.message);
         setIsLoading(false);
         resetForm();
         onSuccess?.();
       } else {
-        ToastError(response.message)
+        ToastError(response.message);
         setIsLoading(false);
       }
     } else {
       const response = await UpdateMenu(data, id);
       if (response.statusCode === 200) {
-        ToastSuccess(response.message)
+        ToastSuccess(response.message);
         setIsLoading(false);
         resetForm();
         onSuccess?.();
       } else {
-        ToastError(response.message)
+        ToastError(response.message);
         setIsLoading(false);
       }
     }
@@ -118,7 +126,10 @@ export function Form({ title, id, onSuccess }: { title: string; id: number; onSu
                 Menu Type
               </Label>
               <div className="col-span-3">
-                <ComboboxMenuType value={menuTypeData} onChange={setMenuTypeData} />
+                <ComboboxMenuType
+                  value={menuTypeData}
+                  onChange={setMenuTypeData}
+                />
               </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">

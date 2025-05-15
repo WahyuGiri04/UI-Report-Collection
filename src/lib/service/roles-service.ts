@@ -38,7 +38,6 @@ export async function GetRolesPage(
 
 
 export async function AddRoles(roles: Roles): Promise<BaseResponse<Roles>> {
-  console.log(roles);
   const token = GetToken();
   const response = await fetch(`${API_BASE_URL}admin/roles`, {
     method: "POST",

@@ -7,23 +7,37 @@ import { Menu } from "@/lib/model/Menu";
 import { AddMenu, GetMenuById, UpdateMenu } from "@/lib/service/menu-service";
 import { Loader2, SaveIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { ComboboxMenuType } from "./combo-box";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DialogFooter } from "@/components/ui/dialog";
 import { ComboboxIcon } from "../../../../components/util/combo-box-icon";
+import { ComboboxMainMenu } from "./combo-box-main-menu";
+import { SubMenu } from "@/lib/model/SubMenu";
+import {
+  AddSubMenu,
+  GetSubMenuById,
+  UpdateSubMenu,
+} from "@/lib/service/sub-menu-service";
 
-export function Form({ title, id, onSuccess }: { title: string; id: number; onSuccess?: () => void; }) {
+export function Form({
+  title,
+  id,
+  onSuccess,
+}: {
+  title: string;
+  id: number;
+  onSuccess?: () => void;
+}) {
   const [isLoading, setIsLoading] = useState(false);
-  const [menuName, setMenuName] = useState("");
+  const [subMenuName, setSubMenuName] = useState("");
   const [menuIcon, setMenuIcon] = useState("");
-  const [menuTypeData, setMenuTypeData] = useState("");
+  const [mainMenuId, setMainMenuId] = useState("");
   const [url, setUrl] = useState("");
 
   useEffect(() => {
     if (id === 0) {
-      setMenuName("");
+      setSubMenuName("");
       setMenuIcon("");
-      setMenuTypeData("");
+      setMainMenuId("");
       setUrl("");
     } else {
       fetchData(id);
@@ -32,52 +46,54 @@ export function Form({ title, id, onSuccess }: { title: string; id: number; onSu
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const data: Menu = {
-      menuName: menuName,
+    const data: SubMenu = {
+      subMenuName: subMenuName,
       icon: menuIcon,
-      menuType: Number(menuTypeData),
+      mainMenuId: {
+        id: Number(mainMenuId),
+      },
       url: url,
     };
     setIsLoading(true);
     if (id === 0) {
-      const response = await AddMenu(data);
+      const response = await AddSubMenu(data);
       if (response.statusCode === 200) {
-        ToastSuccess(response.message)
+        ToastSuccess(response.message);
         setIsLoading(false);
         resetForm();
         onSuccess?.();
       } else {
-        ToastError(response.message)
+        ToastError(response.message);
         setIsLoading(false);
       }
     } else {
-      const response = await UpdateMenu(data, id);
+      const response = await UpdateSubMenu(data, id);
       if (response.statusCode === 200) {
-        ToastSuccess(response.message)
+        ToastSuccess(response.message);
         setIsLoading(false);
         resetForm();
         onSuccess?.();
       } else {
-        ToastError(response.message)
+        ToastError(response.message);
         setIsLoading(false);
       }
     }
   };
 
   const resetForm = () => {
-    setMenuName("");
+    setSubMenuName("");
     setMenuIcon("");
-    setMenuTypeData("");
+    setMainMenuId("");
     setUrl("");
   };
 
-  const fetchData = async (menuId: number) => {
+  const fetchData = async (subMenuId: number) => {
     setIsLoading(true);
-    const response = await GetMenuById(menuId);
+    const response = await GetSubMenuById(subMenuId);
     if (response.data !== undefined) {
-      setMenuName(response.data.menuName);
+      setSubMenuName(response.data.subMenuName);
       setMenuIcon(response.data.icon);
-      setMenuTypeData(String(response.data.menuType));
+      setMainMenuId(String(response.data.mainMenuId?.id));
       setUrl(response.data.url);
     }
     setIsLoading(false);
@@ -94,15 +110,19 @@ export function Form({ title, id, onSuccess }: { title: string; id: number; onSu
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="menu-name" className="text-left sm:text-right">
-                Menu Name
+              <Label
+                htmlFor="sub-menu-name"
+                className="text-left sm:text-right"
+              >
+                Sub Menu Name
               </Label>
               <Input
-                id="menu-name"
-                value={menuName}
-                onChange={(e) => setMenuName(e.target.value)}
+                id="sub-menu-name"
+                value={subMenuName}
+                onChange={(e) => setSubMenuName(e.target.value)}
                 required
                 className="col-span-3"
+                placeholder="Sub Menu Name ..."
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
@@ -118,7 +138,7 @@ export function Form({ title, id, onSuccess }: { title: string; id: number; onSu
                 Menu Type
               </Label>
               <div className="col-span-3">
-                <ComboboxMenuType value={menuTypeData} onChange={setMenuTypeData} />
+                <ComboboxMainMenu value={mainMenuId} onChange={setMainMenuId} />
               </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
@@ -131,6 +151,7 @@ export function Form({ title, id, onSuccess }: { title: string; id: number; onSu
                 onChange={(e) => setUrl(e.target.value)}
                 required
                 className="col-span-3"
+                placeholder="URL ..."
               />
             </div>
           </div>
