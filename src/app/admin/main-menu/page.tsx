@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Menu } from "@/lib/model/Menu";
+import { Menu } from "@/lib/model/entity/Menu";
 import { GetMenuPage } from "@/lib/service/menu-service";
 import { Form } from "./form/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

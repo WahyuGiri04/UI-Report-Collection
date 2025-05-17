@@ -34,7 +34,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { GetSubMenuPage } from "@/lib/service/sub-menu-service";
-import { SubMenu } from "@/lib/model/SubMenu";
+import { SubMenu } from "@/lib/model/entity/SubMenu";
 import { ComboboxMainMenu } from "./form/combo-box-main-menu";
 
 export default function Page() {

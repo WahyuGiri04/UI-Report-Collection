@@ -21,7 +21,7 @@ import {
 import { SafeDynamicIcon } from "@/components/util/safe-dynamic-icon";
 import { GetMenuList } from "@/lib/service/menu-service";
 import { useEffect, useRef, useState } from "react";
-import { Menu } from "@/lib/model/Menu";
+import { Menu } from "@/lib/model/entity/Menu";
 
 type ComboboxMainMenuProps = {
   value: string;

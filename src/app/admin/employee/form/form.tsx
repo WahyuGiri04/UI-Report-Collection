@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ToastError, ToastSuccess } from "@/components/util/toast-util";
-import { Menu } from "@/lib/model/Menu";
+import { Menu } from "@/lib/model/entity/Menu";
 import { AddMenu, GetMenuById, UpdateMenu } from "@/lib/service/menu-service";
 import { Loader2, SaveIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -11,7 +11,7 @@ import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DialogFooter } from "@/components/ui/dialog";
 import { ComboboxIcon } from "../../../../components/util/combo-box-icon";
 import { ComboboxMainMenu } from "./combo-box-main-menu";
-import { SubMenu } from "@/lib/model/SubMenu";
+import { SubMenu } from "@/lib/model/entity/SubMenu";
 import {
   AddSubMenu,
   GetSubMenuById,

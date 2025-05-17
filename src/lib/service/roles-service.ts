@@ -1,6 +1,6 @@
-import { BaseResponse } from "../model/BaseResponse";
-import { BaseResponsePage } from "../model/BaseResponsePage";
-import { Roles } from "../model/Roles";
+import { BaseResponse } from "../model/view/BaseResponse";
+import { BaseResponsePage } from "../model/view/BaseResponsePage";
+import { Roles } from "../model/entity/Roles";
 import { GetToken } from "./token-service";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -35,7 +35,6 @@ export async function GetRolesPage(
   );
   return await response.json();
 }
-
 
 export async function AddRoles(roles: Roles): Promise<BaseResponse<Roles>> {
   const token = GetToken();
@@ -74,7 +73,10 @@ export async function DeleteRoles(id: number): Promise<BaseResponse<Roles>> {
   return await response.json();
 }
 
-export async function UpdateRoles(roles: Roles, id: number): Promise<BaseResponse<Roles>> {
+export async function UpdateRoles(
+  roles: Roles,
+  id: number
+): Promise<BaseResponse<Roles>> {
   const token = GetToken();
   const response = await fetch(`${API_BASE_URL}admin/roles/${id}`, {
     method: "PUT",

@@ -34,35 +34,44 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { GetSubMenuPage } from "@/lib/service/sub-menu-service";
-import { SubMenu } from "@/lib/model/SubMenu";
+import { SubMenu } from "@/lib/model/entity/SubMenu";
 import { ComboboxMainMenu } from "./form/combo-box-main-menu";
+import { GetEmployeePage } from "@/lib/service/employee-service";
+import { EmployeeSearch } from "@/lib/model/view/EmployeeSearch";
+import { Employee } from "@/lib/model/entity/Employee";
+import { ComboboxGender } from "@/components/util/combo-box-gender";
 
 export default function Page() {
-  const [data, setData] = useState<SubMenu[]>([]);
+  const [data, setData] = useState<Employee[]>([]);
   const [totalData, setTotalData] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const [row, setRow] = useState(10);
   const [page, setPage] = useState(1);
-  const [searchSubMenuName, setSearchSubMenuName] = useState("");
-  const [searchMainMenuId, setSearchMainMenuId] = useState("");
+  const [searchEmployeeForm, setSearchEmployeeForm] = useState<EmployeeSearch>({
+    nip: "",
+    fullName: "",
+    gender: "",
+    email: "",
+  });
   const [editId, setEditId] = useState(0);
   const [activeTab, setActiveTab] = useState("data-table");
   const tabsRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchPageData(searchSubMenuName, searchMainMenuId, page, row);
+    if (searchEmployeeForm) {
+      fetchPageData(searchEmployeeForm, page, row);
+    }
   }, []);
-
   const fetchPageData = async (
-    subMenuName: string,
-    mainMenuId: string,
+    employeeSearchForm: EmployeeSearch,
     pageNumber: number,
     rowPerPage: number
   ) => {
-    const response = await GetSubMenuPage(
-      subMenuName,
-      Number(mainMenuId),
+    setIsLoading(true);
+    const response = await GetEmployeePage(
+      employeeSearchForm,
       pageNumber,
       rowPerPage
     );
@@ -72,41 +81,45 @@ export default function Page() {
       setPage(pageNumber);
       setTotalPage(response.data?.totalPages);
     }
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setIsLoading(false);
   };
 
   const onChangeRow = async (value: number) => {
     setRow(value);
-    fetchPageData(searchSubMenuName, searchMainMenuId, 1, value);
+    fetchPageData(searchEmployeeForm, 1, value);
   };
 
   const goToFirstPage = () => {
-    if (page !== 1) fetchPageData(searchSubMenuName, searchMainMenuId, 1, row);
+    if (page !== 1) fetchPageData(searchEmployeeForm, 1, row);
   };
 
   const goToPrevPage = () => {
-    if (page > 1)
-      fetchPageData(searchSubMenuName, searchMainMenuId, page - 1, row);
+    if (page > 1) fetchPageData(searchEmployeeForm, page - 1, row);
   };
 
   const goToNextPage = () => {
-    if (page < totalPage)
-      fetchPageData(searchSubMenuName, searchMainMenuId, page + 1, row);
+    if (page < totalPage) fetchPageData(searchEmployeeForm, page + 1, row);
   };
 
   const goToLastPage = () => {
-    if (page !== totalPage)
-      fetchPageData(searchSubMenuName, searchMainMenuId, totalPage, row);
+    if (page !== totalPage) fetchPageData(searchEmployeeForm, totalPage, row);
   };
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    fetchPageData(searchSubMenuName, searchMainMenuId, page, row);
+    console.log(searchEmployeeForm);
+    fetchPageData(searchEmployeeForm, page, row);
   };
 
   const handleReset = () => {
-    setSearchSubMenuName("");
-    setSearchMainMenuId("");
-    fetchPageData("", "", page, row);
+    setSearchEmployeeForm({
+      nip: "",
+      fullName: "",
+      gender: "",
+      email: "",
+    });
+    fetchPageData(searchEmployeeForm, page, row);
   };
 
   const handleEditClick = (id: number) => {
@@ -130,7 +143,7 @@ export default function Page() {
   };
 
   const handleFormSuccess = () => {
-    fetchPageData(searchSubMenuName, searchMainMenuId, page, row);
+    fetchPageData(searchEmployeeForm, page, row);
     setActiveTab("data-table");
     setEditId(0);
     if (tabsRef.current) {
@@ -153,7 +166,7 @@ export default function Page() {
             <TabsList className="grid w-full sm:w-[400px] grid-cols-2">
               <TabsTrigger value="data-table">Data Table</TabsTrigger>
               <TabsTrigger value="form-data">
-                {editId === 0 ? "Add Sub Menu" : "Edit Sub Menu"}
+                {editId === 0 ? "Add Employee" : "Edit Employee"}
               </TabsTrigger>
             </TabsList>
             <TabsContent value="data-table">
@@ -175,31 +188,89 @@ export default function Page() {
                     <CollapsibleContent className="">
                       <div className="w-full items-center justify-between rounded-md bg p-4">
                         <form onSubmit={handleSearch}>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 sm:w-[400px] gap-4 w-full">
+                          <div className="grid grid-cols-2 sm:grid-cols-4 sm:w-[500px] gap-4 w-full">
+                            <Label
+                              htmlFor="sub-menu-name"
+                              className="text-left sm:text-right"
+                            >
+                              NIP
+                            </Label>
                             <Input
-                              placeholder="Filter Main Menu Name..."
-                              className="sm:w-full col-span-2"
-                              id="searchSubMenuName"
-                              value={searchSubMenuName}
+                              placeholder="Filter by NIP..."
+                              className="sm:w-full col-span-3"
+                              id="searchNIP"
+                              value={searchEmployeeForm.nip}
                               onChange={(e) =>
-                                setSearchSubMenuName(e.target.value)
+                                setSearchEmployeeForm({
+                                  ...searchEmployeeForm,
+                                  nip: e.target.value,
+                                })
                               }
                             />
-                            <ComboboxMainMenu
-                              value={searchMainMenuId}
-                              onChange={setSearchMainMenuId}
+                            <Label
+                              htmlFor="sub-menu-name"
+                              className="text-left sm:text-right"
+                            >
+                              Name
+                            </Label>
+                            <Input
+                              placeholder="Filter by Name..."
+                              className="sm:w-full col-span-3"
+                              id="searchName"
+                              value={searchEmployeeForm.fullName}
+                              onChange={(e) =>
+                                setSearchEmployeeForm({
+                                  ...searchEmployeeForm,
+                                  fullName: e.target.value,
+                                })
+                              }
+                            />
+                            <Label
+                              htmlFor="sub-menu-name"
+                              className="text-left sm:text-right"
+                            >
+                              Gender
+                            </Label>
+                            <div className="col-span-3">
+                              <ComboboxGender
+                                value={searchEmployeeForm.gender}
+                                onChange={(value) =>
+                                  setSearchEmployeeForm({
+                                    ...searchEmployeeForm,
+                                    gender: value || "",
+                                  })
+                                }
+                              />
+                            </div>
+                            <Label
+                              htmlFor="sub-menu-name"
+                              className="text-left sm:text-right"
+                            >
+                              Email
+                            </Label>
+                            <Input
+                              placeholder="Filter by Email..."
+                              className="sm:w-full col-span-3"
+                              id="searchEmail"
+                              value={searchEmployeeForm.email}
+                              onChange={(e) =>
+                                setSearchEmployeeForm({
+                                  ...searchEmployeeForm,
+                                  email: e.target.value,
+                                })
+                              }
                             />
                             <Button
                               type="submit"
                               variant="secondary"
-                              className="px-8"
+                              className="col-span-3 sm:col-span-2"
                             >
                               <Search className="mr-2 w-full" />
                               Search
                             </Button>
                             <Button
                               variant="outline"
-                              className="px-8"
+                              className="col-span-3 sm:col-span-2"
                               onClick={handleReset}
                             >
                               <RotateCcwIcon />
@@ -214,13 +285,13 @@ export default function Page() {
                     <DataTable
                       columns={columns(
                         fetchPageData,
-                        searchSubMenuName,
-                        searchMainMenuId,
+                        searchEmployeeForm,
                         page,
                         row,
                         handleEditClick
                       )}
                       data={data}
+                      isLoading={isLoading}
                     />
                   </div>
                   <div className="flex items-center justify-between px-4 py-4">

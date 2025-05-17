@@ -28,9 +28,13 @@ import {
 import { Form } from "./form/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { GetRolesPage } from "@/lib/service/roles-service";
-import { Roles } from "@/lib/model/Roles";
+import { Roles } from "@/lib/model/entity/Roles";
 
 export default function Page() {
   const [data, setData] = useState<Roles[]>([]);
@@ -42,13 +46,17 @@ export default function Page() {
   const [editId, setEditId] = useState(0);
   const [activeTab, setActiveTab] = useState("data-table");
   const tabsRef = useRef<HTMLDivElement>(null);
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     fetchPageData(searchRoleName, page, row);
   }, []);
 
-  const fetchPageData = async (roleName: string, pageNumber: number, rowPerPage: number) => {
+  const fetchPageData = async (
+    roleName: string,
+    pageNumber: number,
+    rowPerPage: number
+  ) => {
     const response = await GetRolesPage(roleName, pageNumber, rowPerPage);
     if (response.data !== undefined) {
       setTotalData(response.data?.totalData);
@@ -82,7 +90,7 @@ export default function Page() {
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     fetchPageData(searchRoleName, page, row);
-  }
+  };
 
   const handleReset = () => {
     setSearchRoleName("");
@@ -93,7 +101,9 @@ export default function Page() {
     setEditId(id);
     setActiveTab("form-data");
     if (tabsRef.current) {
-      const formTabTrigger = tabsRef.current.querySelector('[value="form-data"]') as HTMLButtonElement;
+      const formTabTrigger = tabsRef.current.querySelector(
+        '[value="form-data"]'
+      ) as HTMLButtonElement;
       if (formTabTrigger) {
         formTabTrigger.click();
       }
@@ -112,7 +122,9 @@ export default function Page() {
     setActiveTab("data-table");
     setEditId(0);
     if (tabsRef.current) {
-      const dataTableTab = tabsRef.current.querySelector('[value="data-table"]') as HTMLButtonElement;
+      const dataTableTab = tabsRef.current.querySelector(
+        '[value="data-table"]'
+      ) as HTMLButtonElement;
       if (dataTableTab) {
         dataTableTab.click();
       }
@@ -153,13 +165,19 @@ export default function Page() {
                         <form onSubmit={handleSearch}>
                           <div className="grid grid-cols-1 sm:grid-cols-2 sm:w-[400px] gap-4 w-full">
                             <Input
-                              placeholder="Filter Main Menu Name..."
+                              placeholder="Filter Role Name..."
                               className="sm:w-full col-span-2"
                               id="searchRoleName"
                               value={searchRoleName}
-                              onChange={(e) => setSearchRoleName(e.target.value)}
+                              onChange={(e) =>
+                                setSearchRoleName(e.target.value)
+                              }
                             />
-                            <Button type="submit" variant="secondary" className="px-8">
+                            <Button
+                              type="submit"
+                              variant="secondary"
+                              className="px-8"
+                            >
                               <Search className="mr-2 w-full" />
                               Search
                             </Button>
@@ -194,7 +212,10 @@ export default function Page() {
                     </div>
                     <div className="flex w-full items-center gap-8 lg:w-fit">
                       <div className="hidden items-center gap-2 lg:flex">
-                        <Label htmlFor="rows-per-page" className="text-sm font-medium">
+                        <Label
+                          htmlFor="rows-per-page"
+                          className="text-sm font-medium"
+                        >
                           Rows per page
                         </Label>
                         <Select

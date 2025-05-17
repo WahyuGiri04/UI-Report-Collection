@@ -8,10 +8,22 @@ import { useEffect, useState } from "react";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DialogFooter } from "@/components/ui/dialog";
 import { ComboboxIcon } from "../../../../components/util/combo-box-icon";
-import { Roles } from "@/lib/model/Roles";
-import { AddRoles, GetRolesById, UpdateRoles } from "@/lib/service/roles-service";
+import { Roles } from "@/lib/model/entity/Roles";
+import {
+  AddRoles,
+  GetRolesById,
+  UpdateRoles,
+} from "@/lib/service/roles-service";
 
-export function Form({ title, id, onSuccess }: { title: string; id: number; onSuccess?: () => void; }) {
+export function Form({
+  title,
+  id,
+  onSuccess,
+}: {
+  title: string;
+  id: number;
+  onSuccess?: () => void;
+}) {
   const [isLoading, setIsLoading] = useState(false);
   const [roleName, setRoleName] = useState("");
   const [roleIcon, setRoleIcon] = useState("");
@@ -38,23 +50,23 @@ export function Form({ title, id, onSuccess }: { title: string; id: number; onSu
     if (id === 0) {
       const response = await AddRoles(data);
       if (response.statusCode === 200) {
-        ToastSuccess(response.message)
+        ToastSuccess(response.message);
         setIsLoading(false);
         resetForm();
         onSuccess?.();
       } else {
-        ToastError(response.message)
+        ToastError(response.message);
         setIsLoading(false);
       }
     } else {
       const response = await UpdateRoles(data, id);
       if (response.statusCode === 200) {
-        ToastSuccess(response.message)
+        ToastSuccess(response.message);
         setIsLoading(false);
         resetForm();
         onSuccess?.();
       } else {
-        ToastError(response.message)
+        ToastError(response.message);
         setIsLoading(false);
       }
     }

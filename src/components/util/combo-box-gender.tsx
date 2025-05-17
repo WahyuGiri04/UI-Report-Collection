@@ -22,11 +22,11 @@ import { SafeDynamicIcon } from "@/components/util/safe-dynamic-icon";
 import { genderType } from "@/lib/const/gender-type";
 
 type ComboboxDemoProps = {
-  value: string;
+  value?: string;
   onChange: (value: string) => void;
 };
 
-export function ComboboxMenuType({ value, onChange }: ComboboxDemoProps) {
+export function ComboboxGender({ value, onChange }: ComboboxDemoProps) {
   const [open, setOpen] = React.useState(false);
   const selectedItem = genderType.find((item) => item.value === value);
   const buttonRef = React.useRef<HTMLButtonElement>(null);
@@ -41,7 +41,7 @@ export function ComboboxMenuType({ value, onChange }: ComboboxDemoProps) {
           aria-expanded={open}
           className="sm:w-full w-full justify-between col-span-2"
         >
-          {selectedItem ? selectedItem.label : "Select menu type..."}
+          {selectedItem ? selectedItem.label : "Select gender..."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -52,9 +52,9 @@ export function ComboboxMenuType({ value, onChange }: ComboboxDemoProps) {
         id="menu-type"
       >
         <Command className="w-full">
-          <CommandInput placeholder="Search menu type..." className="h-9" />
+          <CommandInput placeholder="Search by gender..." className="h-9" />
           <CommandList>
-            <CommandEmpty>Menu Type</CommandEmpty>
+            <CommandEmpty>Gender</CommandEmpty>
             <CommandGroup>
               {genderType.map((framework) => (
                 <CommandItem

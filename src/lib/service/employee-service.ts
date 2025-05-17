@@ -1,60 +1,49 @@
+import { Employee } from "../model/entity/Employee";
 import { BaseResponse } from "../model/view/BaseResponse";
 import { BaseResponsePage } from "../model/view/BaseResponsePage";
-import { Menu } from "../model/entity/Menu";
+import { EmployeeSearch } from "../model/view/EmployeeSearch";
 import { GetToken } from "./token-service";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export async function GetMenu(): Promise<BaseResponse<Menu[]>> {
+export async function GetEmployeeList(): Promise<BaseResponse<Employee[]>> {
   const token = GetToken();
-  const response = await fetch(`${API_BASE_URL}admin/main-menu/get-main-menu`, {
+  const response = await fetch(`${API_BASE_URL}admin/employee`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   });
-
   return await response.json();
 }
 
-export async function GetMenuList(): Promise<BaseResponse<Menu[]>> {
-  const token = GetToken();
-  const response = await fetch(`${API_BASE_URL}admin/main-menu`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return await response.json();
-}
-
-export async function GetMenuPage(
-  menuName: string,
-  menuType: string,
+export async function GetEmployeePage(
+  employeeSearch: EmployeeSearch,
   pageNumber: number,
   rowPerPage: number
-): Promise<BaseResponse<BaseResponsePage<Menu[]>>> {
+): Promise<BaseResponse<BaseResponsePage<Employee[]>>> {
   const token = GetToken();
   const response = await fetch(
-    `${API_BASE_URL}admin/main-menu/search?mainMenuName=${menuName}&menuType=${menuType}&page=${pageNumber}&pageSize=${rowPerPage}`,
+    `${API_BASE_URL}admin/employee/search?page=${pageNumber}&pageSize=${rowPerPage}`,
     {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
+      body: JSON.stringify(employeeSearch),
     }
   );
 
   return await response.json();
 }
 
-export async function AddMenu(data: Menu): Promise<BaseResponse<Menu>> {
+export async function AddEmployee(
+  data: Employee
+): Promise<BaseResponse<Employee>> {
   const token = GetToken();
-  const response = await fetch(`${API_BASE_URL}admin/main-menu`, {
+  const response = await fetch(`${API_BASE_URL}admin/employee`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -66,12 +55,12 @@ export async function AddMenu(data: Menu): Promise<BaseResponse<Menu>> {
   return await response.json();
 }
 
-export async function UpdateMenu(
-  data: Menu,
+export async function UpdateEmployee(
+  data: Employee,
   id: number
-): Promise<BaseResponse<Menu>> {
+): Promise<BaseResponse<Employee>> {
   const token = GetToken();
-  const response = await fetch(`${API_BASE_URL}admin/main-menu/${id}`, {
+  const response = await fetch(`${API_BASE_URL}admin/employee/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -83,9 +72,11 @@ export async function UpdateMenu(
   return await response.json();
 }
 
-export async function DeleteMenu(id: number): Promise<BaseResponse<Menu>> {
+export async function DeleteEmployee(
+  id: number
+): Promise<BaseResponse<Employee>> {
   const token = GetToken();
-  const response = await fetch(`${API_BASE_URL}admin/main-menu/${id}`, {
+  const response = await fetch(`${API_BASE_URL}admin/employee/${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -96,9 +87,9 @@ export async function DeleteMenu(id: number): Promise<BaseResponse<Menu>> {
   return await response.json();
 }
 
-export async function GetMenuById(id: number): Promise<BaseResponse<Menu>> {
+export async function GetEmployeeById(id: number): Promise<BaseResponse<Employee>> {
   const token = GetToken();
-  const response = await fetch(`${API_BASE_URL}admin/main-menu/${id}`, {
+  const response = await fetch(`${API_BASE_URL}admin/employee/${id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

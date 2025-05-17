@@ -1,6 +1,6 @@
-import { BaseResponse } from "@/lib/model/BaseResponse";
-import { LoginForm } from "@/lib/model/Login";
-import { LoginResponse } from "@/lib/model/LoginResponse";
+import { BaseResponse } from "@/lib/model/view/BaseResponse";
+import { LoginForm } from "@/lib/model/view/Login";
+import { LoginResponse } from "@/lib/model/view/LoginResponse";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
