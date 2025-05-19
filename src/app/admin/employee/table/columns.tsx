@@ -13,6 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { DialogDetail } from "../alert/detail";
 
 export const columns = (
   onReload: (
@@ -69,14 +70,9 @@ export const columns = (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
-                size="sm"
-                // onClick={() => onEditClick(row.original.id!)}
-              >
-                <Eye className="h-4 w-4" />
-              </Button>
+              <div>
+                <DialogDetail id={row.original.id!} />
+              </div>
             </TooltipTrigger>
             <TooltipContent>
               <p>View</p>
