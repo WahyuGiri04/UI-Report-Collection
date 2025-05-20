@@ -33,22 +33,25 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { GetEmployeePage } from "@/lib/service/employee-service";
-import { EmployeeSearch } from "@/lib/model/view/EmployeeSearch";
-import { Employee } from "@/lib/model/entity/Employee";
-import { ComboboxGender } from "@/components/util/combo-box-gender";
+import { UsersSearch } from "@/lib/model/view/UsersSearch";
+import { GetUsersPage } from "@/lib/service/users-service";
+import { Users } from "@/lib/model/entity/Users";
+import { ComboboxDepartment } from "@/components/util/combo-box-department";
+import { ComboboxRoles } from "@/components/util/combo-box-roles";
 
 export default function Page() {
-  const [data, setData] = useState<Employee[]>([]);
+  const [data, setData] = useState<Users[]>([]);
   const [totalData, setTotalData] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const [row, setRow] = useState(10);
   const [page, setPage] = useState(1);
-  const [searchEmployeeForm, setSearchEmployeeForm] = useState<EmployeeSearch>({
+  const [searchForm, setSearchForm] = useState<UsersSearch>({
     nip: "",
     fullName: "",
-    gender: "",
     email: "",
+    userName: "",
+    departmentId: undefined,
+    roleId: undefined,
   });
   const [editId, setEditId] = useState(0);
   const [activeTab, setActiveTab] = useState("data-table");
@@ -57,21 +60,17 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (searchEmployeeForm) {
-      fetchPageData(searchEmployeeForm, page, row);
+    if (searchForm) {
+      fetchPageData(searchForm, page, row);
     }
   }, []);
   const fetchPageData = async (
-    employeeSearchForm: EmployeeSearch,
+    dataSearchForm: UsersSearch,
     pageNumber: number,
     rowPerPage: number
   ) => {
     setIsLoading(true);
-    const response = await GetEmployeePage(
-      employeeSearchForm,
-      pageNumber,
-      rowPerPage
-    );
+    const response = await GetUsersPage(dataSearchForm, pageNumber, rowPerPage);
     if (response.data !== undefined) {
       setTotalData(response.data?.totalData);
       setData(response.data?.content || []);
@@ -84,39 +83,41 @@ export default function Page() {
 
   const onChangeRow = async (value: number) => {
     setRow(value);
-    fetchPageData(searchEmployeeForm, 1, value);
+    fetchPageData(searchForm, 1, value);
   };
 
   const goToFirstPage = () => {
-    if (page !== 1) fetchPageData(searchEmployeeForm, 1, row);
+    if (page !== 1) fetchPageData(searchForm, 1, row);
   };
 
   const goToPrevPage = () => {
-    if (page > 1) fetchPageData(searchEmployeeForm, page - 1, row);
+    if (page > 1) fetchPageData(searchForm, page - 1, row);
   };
 
   const goToNextPage = () => {
-    if (page < totalPage) fetchPageData(searchEmployeeForm, page + 1, row);
+    if (page < totalPage) fetchPageData(searchForm, page + 1, row);
   };
 
   const goToLastPage = () => {
-    if (page !== totalPage) fetchPageData(searchEmployeeForm, totalPage, row);
+    if (page !== totalPage) fetchPageData(searchForm, totalPage, row);
   };
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(searchEmployeeForm);
-    fetchPageData(searchEmployeeForm, page, row);
+    console.log(searchForm);
+    fetchPageData(searchForm, page, row);
   };
 
   const handleReset = () => {
-    setSearchEmployeeForm({
+    setSearchForm({
       nip: "",
       fullName: "",
-      gender: "",
       email: "",
+      userName: "",
+      departmentId: undefined,
+      roleId: undefined,
     });
-    fetchPageData(searchEmployeeForm, page, row);
+    fetchPageData(searchForm, page, row);
   };
 
   const handleEditClick = (id: number) => {
@@ -140,7 +141,7 @@ export default function Page() {
   };
 
   const handleFormSuccess = () => {
-    fetchPageData(searchEmployeeForm, page, row);
+    fetchPageData(searchForm, page, row);
     setActiveTab("data-table");
     setEditId(0);
     if (tabsRef.current) {
@@ -163,7 +164,7 @@ export default function Page() {
             <TabsList className="grid w-full sm:w-[400px] grid-cols-2">
               <TabsTrigger value="data-table">Data Table</TabsTrigger>
               <TabsTrigger value="form-data">
-                {editId === 0 ? "Add Employee" : "Edit Employee"}
+                {editId === 0 ? "Add Users" : "Edit Users"}
               </TabsTrigger>
             </TabsList>
             <TabsContent value="data-table">
@@ -196,10 +197,10 @@ export default function Page() {
                               placeholder="Filter by NIP..."
                               className="sm:w-full col-span-3"
                               id="searchNIP"
-                              value={searchEmployeeForm.nip}
+                              value={searchForm.nip}
                               onChange={(e) =>
-                                setSearchEmployeeForm({
-                                  ...searchEmployeeForm,
+                                setSearchForm({
+                                  ...searchForm,
                                   nip: e.target.value,
                                 })
                               }
@@ -214,31 +215,14 @@ export default function Page() {
                               placeholder="Filter by Name..."
                               className="sm:w-full col-span-3"
                               id="searchName"
-                              value={searchEmployeeForm.fullName}
+                              value={searchForm.fullName}
                               onChange={(e) =>
-                                setSearchEmployeeForm({
-                                  ...searchEmployeeForm,
+                                setSearchForm({
+                                  ...searchForm,
                                   fullName: e.target.value,
                                 })
                               }
                             />
-                            <Label
-                              htmlFor="sub-menu-name"
-                              className="text-left sm:text-right"
-                            >
-                              Gender
-                            </Label>
-                            <div className="col-span-3">
-                              <ComboboxGender
-                                value={searchEmployeeForm.gender}
-                                onChange={(value) =>
-                                  setSearchEmployeeForm({
-                                    ...searchEmployeeForm,
-                                    gender: value || "",
-                                  })
-                                }
-                              />
-                            </div>
                             <Label
                               htmlFor="sub-menu-name"
                               className="text-left sm:text-right"
@@ -249,14 +233,48 @@ export default function Page() {
                               placeholder="Filter by Email..."
                               className="sm:w-full col-span-3"
                               id="searchEmail"
-                              value={searchEmployeeForm.email}
+                              value={searchForm.email}
                               onChange={(e) =>
-                                setSearchEmployeeForm({
-                                  ...searchEmployeeForm,
+                                setSearchForm({
+                                  ...searchForm,
                                   email: e.target.value,
                                 })
                               }
                             />
+                            <Label
+                              htmlFor="department"
+                              className="text-left sm:text-right"
+                            >
+                              Department
+                            </Label>
+                            <div className="col-span-3">
+                              <ComboboxDepartment
+                                value={String(searchForm.departmentId)}
+                                onChange={(value) =>
+                                  setSearchForm({
+                                    ...searchForm,
+                                    departmentId: Number(value) || undefined,
+                                  })
+                                }
+                              />
+                            </div>
+                            <Label
+                              htmlFor="roles"
+                              className="text-left sm:text-right"
+                            >
+                              Role
+                            </Label>
+                            <div className="col-span-3">
+                              <ComboboxRoles
+                                value={String(searchForm.roleId)}
+                                onChange={(value) =>
+                                  setSearchForm({
+                                    ...searchForm,
+                                    roleId: Number(value) || undefined,
+                                  })
+                                }
+                              />
+                            </div>
                             <Button
                               type="submit"
                               variant="secondary"
@@ -282,7 +300,7 @@ export default function Page() {
                     <DataTable
                       columns={columns(
                         fetchPageData,
-                        searchEmployeeForm,
+                        searchForm,
                         page,
                         row,
                         handleEditClick
@@ -372,7 +390,7 @@ export default function Page() {
             <TabsContent value="form-data">
               <Card>
                 <Form
-                  title={editId === 0 ? "Add Sub Menu" : "Edit Sub Menu"}
+                  title={editId === 0 ? "Add User" : "Edit User"}
                   id={editId}
                   onSuccess={handleFormSuccess}
                 />

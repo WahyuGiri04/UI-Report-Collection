@@ -392,7 +392,7 @@ export default function Page() {
             <TabsContent value="form-data">
               <Card>
                 <Form
-                  title={editId === 0 ? "Add Sub Menu" : "Edit Sub Menu"}
+                  title={editId === 0 ? "Add Employee" : "Edit Employee"}
                   id={editId}
                   onSuccess={handleFormSuccess}
                 />

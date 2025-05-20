@@ -11,8 +11,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { ToastError, ToastSuccess } from "@/components/util/toast-util";
-import { DeleteEmployee } from "@/lib/service/employee-service";
-import { DeleteSubMenu } from "@/lib/service/sub-menu-service";
+import { DeleteUsers } from "@/lib/service/users-service";
 import { Trash2Icon } from "lucide-react";
 
 export function Alert({
@@ -23,7 +22,7 @@ export function Alert({
   onSuccess?: () => void;
 }) {
   const handleDelete = async () => {
-    const response = await DeleteEmployee(id);
+    const response = await DeleteUsers(id);
     if (response.statusCode === 200) {
       ToastSuccess(response.message);
     } else {

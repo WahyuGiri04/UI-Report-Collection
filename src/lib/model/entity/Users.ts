@@ -6,5 +6,5 @@ export interface Users {
   username?: string;
   password?: string;
   employee?: Employee | null;
-  roles?: Roles | null;
+  roles?: Roles[] | null | undefined;
 }

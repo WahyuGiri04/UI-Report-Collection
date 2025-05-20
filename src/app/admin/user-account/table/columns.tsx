@@ -3,10 +3,6 @@ import { Button } from "@/components/ui/button";
 import { SafeDynamicIcon } from "@/components/util/safe-dynamic-icon";
 import { ColumnDef } from "@tanstack/react-table";
 import { Alert } from "../alert/alert";
-import { Eye, PencilIcon } from "lucide-react";
-import { SubMenu } from "@/lib/model/entity/SubMenu";
-import { EmployeeSearch } from "@/lib/model/view/EmployeeSearch";
-import { Employee } from "@/lib/model/entity/Employee";
 import {
   Tooltip,
   TooltipContent,
@@ -14,53 +10,67 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { DialogDetail } from "../alert/detail";
+import { UsersSearch } from "@/lib/model/view/UsersSearch";
+import { Users } from "@/lib/model/entity/Users";
+import { PencilIcon } from "lucide-react";
+import { ro } from "date-fns/locale";
 
 export const columns = (
-  onReload: (
-    searchEmployeeForm: EmployeeSearch,
-    page: number,
-    row: number
-  ) => void,
-  searchEmployeeForm: EmployeeSearch,
+  onReload: (searchForm: UsersSearch, page: number, row: number) => void,
+  searchForm: UsersSearch,
   page: number,
   rowNumber: number,
   onEditClick: (id: number) => void
-): ColumnDef<Employee>[] => [
+): ColumnDef<Users>[] => [
   {
     header: " ",
     cell: () => "#",
   },
   {
-    accessorKey: "nip",
+    accessorKey: "username",
+    header: "User Name",
+  },
+  {
     header: "NIP",
+    cell: ({ row }) => <p>{row.original.employee?.nip}</p>,
   },
   {
-    accessorKey: "fullName",
-    header: "Full Name",
+    header: "Name",
+    cell: ({ row }) => <p>{row.original.employee?.fullName}</p>,
   },
   {
-    accessorKey: "gender",
-    header: "Gender",
-    cell: ({ row }) => (
-      <Badge
-        variant="outline"
-        className="flex gap-1 px-1.5 text-muted-foreground [&_svg]:size-3"
-      >
-        <SafeDynamicIcon
-          color={row.original.gender === "L" ? "red" : "pink"}
-          name={row.original.gender === "L" ? "mars" : "venus"}
-        />
-        <span>{row.original.gender === "L" ? "Laki-laki" : "Perempuan"}</span>
-      </Badge>
-    ),
-  },
-  {
-    accessorKey: "email",
     header: "Email",
+    cell: ({ row }) => <p>{row.original.employee?.email}</p>,
   },
   {
     header: "Department",
-    cell: ({ row }) => <>{row.original.departement?.departmentName}</>,
+    cell: ({ row }) => (
+      <>{row.original.employee?.departement?.departmentName}</>
+    ),
+  },
+  {
+    header: "Role",
+    cell: ({ row }) => {
+      const roles = row.original.roles ?? [];
+
+      if (roles.length === 0) {
+        return <>-</>;
+      }
+
+      return (
+        <div className="flex flex-wrap gap-1">
+          {roles.map((role: any, idx: number) => {
+            const isAdmin = role.roleName?.toLowerCase().includes("admin");
+
+            return (
+              <Badge key={idx} variant={isAdmin ? "destructive" : "secondary"}>
+                {role.roleName}
+              </Badge>
+            );
+          })}{" "}
+        </div>
+      );
+    },
   },
   {
     id: "actions",
@@ -105,7 +115,7 @@ export const columns = (
                 <Alert
                   id={row.original.id!}
                   onSuccess={() => {
-                    onReload(searchEmployeeForm, page, rowNumber);
+                    onReload(searchForm, page, rowNumber);
                   }}
                 />
               </div>
