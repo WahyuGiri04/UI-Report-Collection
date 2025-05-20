@@ -18,29 +18,28 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { SafeDynamicIcon } from "@/components/util/safe-dynamic-icon";
-import { GetMenuList } from "@/lib/service/menu-service";
 import { useEffect, useRef, useState } from "react";
-import { Menu } from "@/lib/model/entity/Menu";
+import { Employee } from "@/lib/model/entity/Employee";
+import { GetEmployeeList } from "@/lib/service/employee-service";
 
-type ComboboxMainMenuProps = {
+type ComboboxProps = {
   value: string;
   onChange: (value: string) => void;
   className?: string;
 };
 
-export function ComboboxMainMenu({
+export function ComboboxEmployee({
   value,
   onChange,
   className,
-}: ComboboxMainMenuProps) {
-  const [menuList, setMenuList] = useState<Menu[]>([]);
-  const [displayedMenus, setDisplayedMenus] = useState<Menu[]>([]);
+}: ComboboxProps) {
+  const [dataList, setDataList] = useState<Employee[]>([]);
+  const [displayedData, setDisplayedData] = useState<Employee[]>([]);
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const selectedItem = menuList.find((item) => String(item.id) === value);
+  const selectedItem = dataList.find((item) => String(item.id) === value);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const batchSize = 5;
 
@@ -49,51 +48,51 @@ export function ComboboxMainMenu({
   }, []);
 
   useEffect(() => {
-    if (menuList.length > 0) {
+    if (dataList.length > 0) {
       if (searchTerm) {
-        const filtered = menuList.filter((menu) =>
-          menu.menuName.toLowerCase().includes(searchTerm.toLowerCase())
+        const filtered = dataList.filter((data) =>
+          data.fullName.toLowerCase().includes(searchTerm.toLowerCase())
         );
-        setDisplayedMenus(filtered.slice(0, batchSize));
+        setDisplayedData(filtered.slice(0, batchSize));
       } else {
-        setDisplayedMenus(menuList.slice(0, batchSize));
+        setDisplayedData(dataList.slice(0, batchSize));
       }
     }
-  }, [menuList, searchTerm]);
+  }, [dataList, searchTerm]);
 
   const fetchData = async () => {
     try {
       setIsLoading(true);
-      const response = await GetMenuList();
+      const response = await GetEmployeeList();
       if (response.data !== undefined) {
-        setMenuList(response.data);
-        setDisplayedMenus(response.data.slice(0, batchSize));
+        setDataList(response.data);
+        setDisplayedData(response.data.slice(0, batchSize));
       }
     } catch (error) {
-      console.error("Failed to fetch menu list:", error);
+      console.error("Failed to fetch data list:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const loadMoreMenus = () => {
-    if (displayedMenus.length >= getFilteredMenus().length) return;
+  const loadMoredatas = () => {
+    if (displayedData.length >= getFilteredDatas().length) return;
 
     setLoadingMore(true);
     setTimeout(() => {
-      const nextBatch = getFilteredMenus().slice(
+      const nextBatch = getFilteredDatas().slice(
         0,
-        displayedMenus.length + batchSize
+        displayedData.length + batchSize
       );
-      setDisplayedMenus(nextBatch);
+      setDisplayedData(nextBatch);
       setLoadingMore(false);
     }, 300); // Small timeout to provide visual feedback
   };
 
-  const getFilteredMenus = () => {
-    if (!searchTerm) return menuList;
-    return menuList.filter((menu) =>
-      menu.menuName.toLowerCase().includes(searchTerm.toLowerCase())
+  const getFilteredDatas = () => {
+    if (!searchTerm) return dataList;
+    return dataList.filter((data) =>
+      data.fullName.toLowerCase().includes(searchTerm.toLowerCase())
     );
   };
 
@@ -110,12 +109,12 @@ export function ComboboxMainMenu({
         >
           {isLoading ? (
             <>
-              <span className="text-gray-400">Loading menus...</span>
+              <span className="text-gray-400">Loading employee...</span>
               <div className="animate-spin ml-2 h-4 w-4 border-2 border-gray-300 border-t-primary rounded-full"></div>
             </>
           ) : (
             <>
-              {selectedItem ? selectedItem.menuName : "Select Main menu..."}
+              {selectedItem ? selectedItem.fullName : "Select Emplopyee..."}
               <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
             </>
           )}
@@ -125,11 +124,11 @@ export function ComboboxMainMenu({
         className="p-0"
         align="start"
         style={{ width: buttonRef.current?.offsetWidth }}
-        id="menu-type"
+        id="data-type"
       >
         <Command className="w-full">
           <CommandInput
-            placeholder="Search menu..."
+            placeholder="Search data..."
             className="h-9"
             onValueChange={setSearchTerm}
           />
@@ -137,31 +136,29 @@ export function ComboboxMainMenu({
             {isLoading ? (
               <div className="py-6 text-center">
                 <div className="animate-spin mx-auto h-6 w-6 border-2 border-gray-300 border-t-primary rounded-full"></div>
-                <p className="mt-2 text-sm text-gray-500">Loading menus...</p>
+                <p className="mt-2 text-sm text-gray-500">
+                  Loading employee...
+                </p>
               </div>
             ) : (
               <>
-                <CommandEmpty>No menu found</CommandEmpty>
+                <CommandEmpty>No data found</CommandEmpty>
                 <CommandGroup>
-                  {displayedMenus.map((menu) => (
+                  {displayedData.map((data) => (
                     <CommandItem
-                      key={menu.id}
-                      value={menu.menuName}
+                      key={data.id}
+                      value={data.fullName}
                       onSelect={() => {
-                        onChange(String(menu.id));
+                        onChange(String(data.id));
                         setOpen(false);
                         setSearchTerm("");
                       }}
                     >
-                      <SafeDynamicIcon
-                        name={menu.icon}
-                        className="mr-2 h-4 w-4"
-                      />
-                      <span className="flex-1">{menu.menuName}</span>
+                      <span className="flex-1">{data.fullName}</span>
                       <Check
                         className={cn(
                           "ml-auto h-4 w-4",
-                          value === String(menu.id)
+                          value === String(data.id)
                             ? "opacity-100"
                             : "opacity-0"
                         )}
@@ -170,12 +167,12 @@ export function ComboboxMainMenu({
                   ))}
                 </CommandGroup>
                 {!isLoading &&
-                  displayedMenus.length < getFilteredMenus().length && (
+                  displayedData.length < getFilteredDatas().length && (
                     <div className="p-2 flex justify-center">
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={loadMoreMenus}
+                        onClick={loadMoredatas}
                         disabled={loadingMore}
                         className="w-full text-xs"
                       >
@@ -186,8 +183,8 @@ export function ComboboxMainMenu({
                           </>
                         ) : (
                           <>
-                            Load More ({displayedMenus.length} of{" "}
-                            {getFilteredMenus().length})
+                            Load More ({displayedData.length} of{" "}
+                            {getFilteredDatas().length})
                           </>
                         )}
                       </Button>

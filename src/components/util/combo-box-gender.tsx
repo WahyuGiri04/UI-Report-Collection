@@ -24,13 +24,13 @@ import { genderType } from "@/lib/const/gender-type";
 type ComboboxDemoProps = {
   value?: string;
   onChange: (value: string) => void;
-  className?: string
+  className?: string;
 };
 
 export function ComboboxGender({
   value,
   onChange,
-  className
+  className,
 }: ComboboxDemoProps) {
   const [open, setOpen] = React.useState(false);
   const selectedItem = genderType.find((item) => item.value === value);
@@ -44,9 +44,7 @@ export function ComboboxGender({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={`w-full justify-between ${
-            className
-          }`}
+          className={`w-full justify-between ${className}`}
         >
           {selectedItem ? selectedItem.label : "Select gender..."}
           <ChevronsUpDown className="opacity-50" />

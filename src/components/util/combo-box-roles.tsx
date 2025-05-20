@@ -26,9 +26,10 @@ import { SafeDynamicIcon } from "./safe-dynamic-icon";
 type ComboboxProps = {
   value: string;
   onChange: (value: string) => void;
+  className?: string;
 };
 
-export function ComboboxRoles({ value, onChange }: ComboboxProps) {
+export function ComboboxRoles({ value, onChange, className }: ComboboxProps) {
   const [dataList, setDataList] = useState<Roles[]>([]);
   const [displayedData, setDisplayedData] = useState<Roles[]>([]);
   const [open, setOpen] = useState(false);
@@ -100,7 +101,7 @@ export function ComboboxRoles({ value, onChange }: ComboboxProps) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="sm:w-full w-full justify-between col-span-2"
+          className={`sm:w-full w-full justify-between col-span-2 ${className}`}
           disabled={isLoading}
         >
           {isLoading ? (

@@ -24,9 +24,14 @@ import { SafeDynamicIcon } from "@/components/util/safe-dynamic-icon";
 type ComboboxDemoProps = {
   value: string;
   onChange: (value: string) => void;
+  className?: string;
 };
 
-export function ComboboxMenuType({ value, onChange }: ComboboxDemoProps) {
+export function ComboboxMenuType({
+  value,
+  onChange,
+  className,
+}: ComboboxDemoProps) {
   const [open, setOpen] = React.useState(false);
   const selectedItem = menuTypeValue.find((item) => item.value === value);
   const buttonRef = React.useRef<HTMLButtonElement>(null);
@@ -39,7 +44,7 @@ export function ComboboxMenuType({ value, onChange }: ComboboxDemoProps) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="sm:w-full w-full justify-between col-span-2"
+          className={`sm:w-full w-full justify-between col-span-2 ${className}`}
         >
           {selectedItem ? selectedItem.label : "Select menu type..."}
           <ChevronsUpDown className="opacity-50" />

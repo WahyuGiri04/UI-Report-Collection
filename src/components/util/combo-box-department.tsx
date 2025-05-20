@@ -26,9 +26,14 @@ import { GetDepartments } from "@/lib/service/department-service";
 type ComboboxProps = {
   value: string;
   onChange: (value: string) => void;
+  className?: string;
 };
 
-export function ComboboxDepartment({ value, onChange }: ComboboxProps) {
+export function ComboboxDepartment({
+  value,
+  onChange,
+  className,
+}: ComboboxProps) {
   const [dataList, setDataList] = useState<Department[]>([]);
   const [displayedData, setDisplayedData] = useState<Department[]>([]);
   const [open, setOpen] = useState(false);
@@ -100,7 +105,7 @@ export function ComboboxDepartment({ value, onChange }: ComboboxProps) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="sm:w-full w-full justify-between col-span-2"
+          className={`sm:w-full w-full justify-between col-span-2 ${className}`}
           disabled={isLoading}
         >
           {isLoading ? (

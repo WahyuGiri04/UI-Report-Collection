@@ -24,9 +24,14 @@ import { SafeDynamicIcon } from "@/components/util/safe-dynamic-icon";
 interface ComboboxIconProps {
   value: string;
   onChange: (value: string) => void;
+  className?: string;
 }
 
-export function ComboboxIcon({ value, onChange }: ComboboxIconProps) {
+export function ComboboxIcon({
+  value,
+  onChange,
+  className,
+}: ComboboxIconProps) {
   const [open, setOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [visibleCount, setVisibleCount] = React.useState(10);
@@ -63,7 +68,7 @@ export function ComboboxIcon({ value, onChange }: ComboboxIconProps) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="sm:w-full w-full justify-between col-span-2"
+          className={`sm:w-full w-full justify-between col-span-2 ${className}`}
         >
           {value ? (
             <div className="flex items-center gap-2">

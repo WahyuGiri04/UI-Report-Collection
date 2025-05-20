@@ -3,8 +3,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ToastError, ToastSuccess } from "@/components/util/toast-util";
-import { Menu } from "@/lib/model/entity/Menu";
-import { AddMenu, GetMenuById, UpdateMenu } from "@/lib/service/menu-service";
 import { Loader2, SaveIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -385,27 +383,6 @@ export function Form({
                   }
                   placeholder="Email ..."
                   type="email"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="icon" className="text-left sm:text-right">
-                Department
-              </Label>
-              <div className="col-span-3">
-                <ComboboxDepartment
-                  value={String(employee.departement?.id)}
-                  onChange={(value) => {
-                    setEmployee({
-                      ...employee,
-                      departement: {
-                        id: Number(value),
-                      },
-                    });
-                  }}
-                  className={
-                    formValid.validDepartment ? "ring-4 ring-red-500" : ""
-                  }
                 />
               </div>
             </div>
