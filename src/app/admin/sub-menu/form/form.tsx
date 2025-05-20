@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DialogFooter } from "@/components/ui/dialog";
 import { ComboboxIcon } from "../../../../components/util/combo-box-icon";
-import { ComboboxMainMenu } from "./combo-box-main-menu";
+import { ComboboxMainMenu } from "../../../../components/util/combo-box-main-menu";
 import { SubMenu } from "@/lib/model/entity/SubMenu";
 import {
   AddSubMenu,

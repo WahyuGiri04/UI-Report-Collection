@@ -16,9 +16,10 @@ import {
   UpdateEmployee,
 } from "@/lib/service/employee-service";
 import { ComboboxGender } from "@/components/util/combo-box-gender";
-import { DateTimePicker } from "./data-time-picker";
+import { DateTimePicker } from "../../../../components/util/data-time-picker";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { ComboboxDepartment } from "@/components/util/combo-box-department";
 
 type formEmpProp = {
   validFullName: boolean;
@@ -40,7 +41,6 @@ export function Form({
   onSuccess?: () => void;
 }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [isValidGender, setIsValidGender] = useState(false);
   const [employee, setEmployee] = useState<Employee>({
     nip: "",
     firstName: "",
@@ -84,10 +84,11 @@ export function Form({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const fullName = employee.firstName + " " + employee.lastName;
 
     setEmployee({
       ...employee,
-      fullName: employee.firstName + " " + employee.lastName,
+      fullName: fullName,
     });
 
     const isValid = validationForm();
@@ -95,30 +96,32 @@ export function Form({
       return;
     }
 
+    console.log(employee);
+
     setIsLoading(true);
-    // if (id === 0) {
-    //   const response = await AddEmployee(employee);
-    //   if (response.statusCode === 200) {
-    //     ToastSuccess(response.message);
-    //     setIsLoading(false);
-    //     resetForm();
-    //     onSuccess?.();
-    //   } else {
-    //     ToastError(response.message);
-    //     setIsLoading(false);
-    //   }
-    // } else {
-    //   const response = await UpdateEmployee(employee, id);
-    //   if (response.statusCode === 200) {
-    //     ToastSuccess(response.message);
-    //     setIsLoading(false);
-    //     resetForm();
-    //     onSuccess?.();
-    //   } else {
-    //     ToastError(response.message);
-    //     setIsLoading(false);
-    //   }
-    // }
+    if (id === 0) {
+      const response = await AddEmployee(employee);
+      if (response.statusCode === 200) {
+        ToastSuccess(response.message);
+        setIsLoading(false);
+        resetForm();
+        onSuccess?.();
+      } else {
+        ToastError(response.message);
+        setIsLoading(false);
+      }
+    } else {
+      const response = await UpdateEmployee(employee, id);
+      if (response.statusCode === 200) {
+        ToastSuccess(response.message);
+        setIsLoading(false);
+        resetForm();
+        onSuccess?.();
+      } else {
+        ToastError(response.message);
+        setIsLoading(false);
+      }
+    }
   };
 
   const resetForm = () => {
@@ -137,7 +140,7 @@ export function Form({
   };
 
   const validationForm = () => {
-    const isFullNameEmpty = !employee.fullName;
+    const isFullNameEmpty = !employee.firstName;
     setFormValid({
       ...formValid,
       validFullName: isFullNameEmpty,
@@ -150,6 +153,41 @@ export function Form({
       validGender: isGenderEmpty,
     });
     if (isGenderEmpty) return false;
+
+    const isAlamatEmpty = !employee.alamat;
+    setFormValid({
+      ...formValid,
+      validAlamat: isAlamatEmpty,
+    });
+    if (isAlamatEmpty) return false;
+
+    const isTglLahir = !employee.tanggalLahir;
+    setFormValid({
+      ...formValid,
+      validTanggalLahir: isTglLahir,
+    });
+    if (isTglLahir) return false;
+
+    const isTempatLahir = !employee.tempatLahir;
+    setFormValid({
+      ...formValid,
+      validTempatLahir: isTempatLahir,
+    });
+    if (isTempatLahir) return false;
+
+    const isEmailEmpty = !employee.email;
+    setFormValid({
+      ...formValid,
+      validEmail: isEmailEmpty,
+    });
+    if (isEmailEmpty) return false;
+
+    const isDepartmentEmpty = !employee.departement?.id;
+    setFormValid({
+      ...formValid,
+      validDepartment: isDepartmentEmpty,
+    });
+    if (isDepartmentEmpty) return false;
 
     return true;
   };
@@ -322,6 +360,52 @@ export function Form({
                     formValid.validTempatLahir ? "ring-4 ring-red-500" : ""
                   }
                   placeholder="Tempat lahir ..."
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="email" className="text-left sm:text-right">
+                Email
+              </Label>
+              <div className="col-span-3">
+                <Input
+                  id="email"
+                  value={employee.email}
+                  onChange={(e) => {
+                    setEmployee({ ...employee, email: e.target.value });
+                    setFormValid({
+                      ...formValid,
+                      validEmail: false,
+                    });
+                  }}
+                  className={
+                    formValid.validEmail
+                      ? "ring-4 ring-red-500 shadow-red-400"
+                      : " "
+                  }
+                  placeholder="Email ..."
+                  type="email"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="icon" className="text-left sm:text-right">
+                Department
+              </Label>
+              <div className="col-span-3">
+                <ComboboxDepartment
+                  value={String(employee.departement?.id)}
+                  onChange={(value) => {
+                    setEmployee({
+                      ...employee,
+                      departement: {
+                        id: Number(value),
+                      },
+                    });
+                  }}
+                  className={
+                    formValid.validDepartment ? "ring-4 ring-red-500" : ""
+                  }
                 />
               </div>
             </div>

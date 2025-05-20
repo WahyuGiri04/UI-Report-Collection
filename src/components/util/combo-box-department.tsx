@@ -21,21 +21,29 @@ import {
 import { SafeDynamicIcon } from "@/components/util/safe-dynamic-icon";
 import { GetMenuList } from "@/lib/service/menu-service";
 import { useEffect, useRef, useState } from "react";
-import { Menu } from "@/lib/model/entity/Menu";
+import { Department } from "@/lib/model/entity/Departement";
+import { GetDepartments } from "@/lib/service/department-service";
 
 type ComboboxMainMenuProps = {
   value: string;
   onChange: (value: string) => void;
+  className?: string;
 };
 
-export function ComboboxMainMenu({ value, onChange }: ComboboxMainMenuProps) {
-  const [menuList, setMenuList] = useState<Menu[]>([]);
-  const [displayedMenus, setDisplayedMenus] = useState<Menu[]>([]);
+export function ComboboxDepartment({
+  value,
+  onChange,
+  className,
+}: ComboboxMainMenuProps) {
+  const [departmentList, setDepartmentList] = useState<Department[]>([]);
+  const [displayedDepartment, setDisplayedDepartment] = useState<Department[]>(
+    []
+  );
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const selectedItem = menuList.find((item) => String(item.id) === value);
+  const selectedItem = departmentList.find((item) => String(item.id) === value);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const batchSize = 5;
 
@@ -44,25 +52,27 @@ export function ComboboxMainMenu({ value, onChange }: ComboboxMainMenuProps) {
   }, []);
 
   useEffect(() => {
-    if (menuList.length > 0) {
+    if (departmentList.length > 0) {
       if (searchTerm) {
-        const filtered = menuList.filter((menu) =>
-          menu.menuName.toLowerCase().includes(searchTerm.toLowerCase())
+        const filtered = departmentList.filter((departement) =>
+          departement.departmentName
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
         );
-        setDisplayedMenus(filtered.slice(0, batchSize));
+        setDisplayedDepartment(filtered.slice(0, batchSize));
       } else {
-        setDisplayedMenus(menuList.slice(0, batchSize));
+        setDisplayedDepartment(departmentList.slice(0, batchSize));
       }
     }
-  }, [menuList, searchTerm]);
+  }, [departmentList, searchTerm]);
 
   const fetchData = async () => {
     try {
       setIsLoading(true);
-      const response = await GetMenuList();
+      const response = await GetDepartments();
       if (response.data !== undefined) {
-        setMenuList(response.data);
-        setDisplayedMenus(response.data.slice(0, batchSize));
+        setDepartmentList(response.data);
+        setDisplayedDepartment(response.data.slice(0, batchSize));
       }
     } catch (error) {
       console.error("Failed to fetch menu list:", error);
@@ -72,23 +82,23 @@ export function ComboboxMainMenu({ value, onChange }: ComboboxMainMenuProps) {
   };
 
   const loadMoreMenus = () => {
-    if (displayedMenus.length >= getFilteredMenus().length) return;
+    if (displayedDepartment.length >= getFiltered().length) return;
 
     setLoadingMore(true);
     setTimeout(() => {
-      const nextBatch = getFilteredMenus().slice(
+      const nextBatch = getFiltered().slice(
         0,
-        displayedMenus.length + batchSize
+        displayedDepartment.length + batchSize
       );
-      setDisplayedMenus(nextBatch);
+      setDisplayedDepartment(nextBatch);
       setLoadingMore(false);
     }, 300); // Small timeout to provide visual feedback
   };
 
-  const getFilteredMenus = () => {
-    if (!searchTerm) return menuList;
-    return menuList.filter((menu) =>
-      menu.menuName.toLowerCase().includes(searchTerm.toLowerCase())
+  const getFiltered = () => {
+    if (!searchTerm) return departmentList;
+    return departmentList.filter((data) =>
+      data.departmentName.toLowerCase().includes(searchTerm.toLowerCase())
     );
   };
 
@@ -100,17 +110,19 @@ export function ComboboxMainMenu({ value, onChange }: ComboboxMainMenuProps) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="sm:w-full w-full justify-between col-span-2"
+          className={`w-full justify-between ${className}`}
           disabled={isLoading}
         >
           {isLoading ? (
             <>
-              <span className="text-gray-400">Loading menus...</span>
+              <span className="text-gray-400">Loading departement...</span>
               <div className="animate-spin ml-2 h-4 w-4 border-2 border-gray-300 border-t-primary rounded-full"></div>
             </>
           ) : (
             <>
-              {selectedItem ? selectedItem.menuName : "Select Main menu..."}
+              {selectedItem
+                ? selectedItem.departmentName
+                : "Select Department..."}
               <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
             </>
           )}
@@ -132,31 +144,29 @@ export function ComboboxMainMenu({ value, onChange }: ComboboxMainMenuProps) {
             {isLoading ? (
               <div className="py-6 text-center">
                 <div className="animate-spin mx-auto h-6 w-6 border-2 border-gray-300 border-t-primary rounded-full"></div>
-                <p className="mt-2 text-sm text-gray-500">Loading menus...</p>
+                <p className="mt-2 text-sm text-gray-500">
+                  Loading departement...
+                </p>
               </div>
             ) : (
               <>
                 <CommandEmpty>No menu found</CommandEmpty>
                 <CommandGroup>
-                  {displayedMenus.map((menu) => (
+                  {displayedDepartment.map((data) => (
                     <CommandItem
-                      key={menu.id}
-                      value={menu.menuName}
+                      key={data.id}
+                      value={data.departmentName}
                       onSelect={() => {
-                        onChange(String(menu.id));
+                        onChange(String(data.id));
                         setOpen(false);
                         setSearchTerm("");
                       }}
                     >
-                      <SafeDynamicIcon
-                        name={menu.icon}
-                        className="mr-2 h-4 w-4"
-                      />
-                      <span className="flex-1">{menu.menuName}</span>
+                      <span className="flex-1">{data.departmentName}</span>
                       <Check
                         className={cn(
                           "ml-auto h-4 w-4",
-                          value === String(menu.id)
+                          value === String(data.id)
                             ? "opacity-100"
                             : "opacity-0"
                         )}
@@ -165,7 +175,7 @@ export function ComboboxMainMenu({ value, onChange }: ComboboxMainMenuProps) {
                   ))}
                 </CommandGroup>
                 {!isLoading &&
-                  displayedMenus.length < getFilteredMenus().length && (
+                  displayedDepartment.length < getFiltered().length && (
                     <div className="p-2 flex justify-center">
                       <Button
                         variant="ghost"
@@ -181,8 +191,8 @@ export function ComboboxMainMenu({ value, onChange }: ComboboxMainMenuProps) {
                           </>
                         ) : (
                           <>
-                            Load More ({displayedMenus.length} of{" "}
-                            {getFilteredMenus().length})
+                            Load More ({displayedDepartment.length} of{" "}
+                            {getFiltered().length})
                           </>
                         )}
                       </Button>

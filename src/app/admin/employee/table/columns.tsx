@@ -47,7 +47,7 @@ export const columns = (
         className="flex gap-1 px-1.5 text-muted-foreground [&_svg]:size-3"
       >
         <SafeDynamicIcon
-          color={row.original.gender === "L" ? "red" : "blue"}
+          color={row.original.gender === "L" ? "red" : "pink"}
           name={row.original.gender === "L" ? "mars" : "venus"}
         />
         <span>{row.original.gender === "L" ? "Laki-laki" : "Perempuan"}</span>
