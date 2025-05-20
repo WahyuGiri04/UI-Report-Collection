@@ -37,7 +37,6 @@ import { GetEmployeePage } from "@/lib/service/employee-service";
 import { EmployeeSearch } from "@/lib/model/view/EmployeeSearch";
 import { Employee } from "@/lib/model/entity/Employee";
 import { ComboboxGender } from "@/components/util/combo-box-gender";
-import { ComboboxDepartment } from "@/components/util/combo-box-department";
 
 export default function Page() {
   const [data, setData] = useState<Employee[]>([]);
@@ -50,7 +49,6 @@ export default function Page() {
     fullName: "",
     gender: "",
     email: "",
-    departmentId: undefined,
   });
   const [editId, setEditId] = useState(0);
   const [activeTab, setActiveTab] = useState("data-table");
@@ -117,7 +115,6 @@ export default function Page() {
       fullName: "",
       gender: "",
       email: "",
-      departmentId: undefined,
     });
     fetchPageData(searchEmployeeForm, page, row);
   };
@@ -260,23 +257,6 @@ export default function Page() {
                                 })
                               }
                             />
-                            <Label
-                              htmlFor="department"
-                              className="text-left sm:text-right"
-                            >
-                              Department
-                            </Label>
-                            <div className="col-span-3">
-                              <ComboboxDepartment
-                                value={String(searchEmployeeForm.departmentId)}
-                                onChange={(value) =>
-                                  setSearchEmployeeForm({
-                                    ...searchEmployeeForm,
-                                    departmentId: Number(value) || undefined,
-                                  })
-                                }
-                              />
-                            </div>
                             <Button
                               type="submit"
                               variant="secondary"

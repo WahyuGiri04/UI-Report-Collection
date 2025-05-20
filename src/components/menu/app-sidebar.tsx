@@ -19,7 +19,7 @@ import { NavMenu } from "./nav-menu";
 import { useState, useEffect } from "react";
 import { Menu } from "@/lib/model/entity/Menu";
 import { GetMenu } from "@/lib/service/menu-service";
-import { Users } from "@/lib/model/view/Users";
+import { Users } from "@/lib/model/entity/Users";
 import { GetUsersDetail } from "@/lib/service/users-service";
 
 const data = {

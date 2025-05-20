@@ -19,31 +19,23 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { SafeDynamicIcon } from "@/components/util/safe-dynamic-icon";
-import { GetMenuList } from "@/lib/service/menu-service";
 import { useEffect, useRef, useState } from "react";
 import { Department } from "@/lib/model/entity/Departement";
 import { GetDepartments } from "@/lib/service/department-service";
 
-type ComboboxMainMenuProps = {
+type ComboboxProps = {
   value: string;
   onChange: (value: string) => void;
-  className?: string;
 };
 
-export function ComboboxDepartment({
-  value,
-  onChange,
-  className,
-}: ComboboxMainMenuProps) {
-  const [departmentList, setDepartmentList] = useState<Department[]>([]);
-  const [displayedDepartment, setDisplayedDepartment] = useState<Department[]>(
-    []
-  );
+export function ComboboxDepartment({ value, onChange }: ComboboxProps) {
+  const [dataList, setDataList] = useState<Department[]>([]);
+  const [displayedData, setDisplayedData] = useState<Department[]>([]);
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const selectedItem = departmentList.find((item) => String(item.id) === value);
+  const selectedItem = dataList.find((item) => String(item.id) === value);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const batchSize = 5;
 
@@ -52,52 +44,50 @@ export function ComboboxDepartment({
   }, []);
 
   useEffect(() => {
-    if (departmentList.length > 0) {
+    if (dataList.length > 0) {
       if (searchTerm) {
-        const filtered = departmentList.filter((departement) =>
-          departement.departmentName
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())
+        const filtered = dataList.filter((data) =>
+          data.departmentName.toLowerCase().includes(searchTerm.toLowerCase())
         );
-        setDisplayedDepartment(filtered.slice(0, batchSize));
+        setDisplayedData(filtered.slice(0, batchSize));
       } else {
-        setDisplayedDepartment(departmentList.slice(0, batchSize));
+        setDisplayedData(dataList.slice(0, batchSize));
       }
     }
-  }, [departmentList, searchTerm]);
+  }, [dataList, searchTerm]);
 
   const fetchData = async () => {
     try {
       setIsLoading(true);
       const response = await GetDepartments();
       if (response.data !== undefined) {
-        setDepartmentList(response.data);
-        setDisplayedDepartment(response.data.slice(0, batchSize));
+        setDataList(response.data);
+        setDisplayedData(response.data.slice(0, batchSize));
       }
     } catch (error) {
-      console.error("Failed to fetch menu list:", error);
+      console.error("Failed to fetch data list:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const loadMoreMenus = () => {
-    if (displayedDepartment.length >= getFiltered().length) return;
+  const loadMoredatas = () => {
+    if (displayedData.length >= getFilteredDatas().length) return;
 
     setLoadingMore(true);
     setTimeout(() => {
-      const nextBatch = getFiltered().slice(
+      const nextBatch = getFilteredDatas().slice(
         0,
-        displayedDepartment.length + batchSize
+        displayedData.length + batchSize
       );
-      setDisplayedDepartment(nextBatch);
+      setDisplayedData(nextBatch);
       setLoadingMore(false);
     }, 300); // Small timeout to provide visual feedback
   };
 
-  const getFiltered = () => {
-    if (!searchTerm) return departmentList;
-    return departmentList.filter((data) =>
+  const getFilteredDatas = () => {
+    if (!searchTerm) return dataList;
+    return dataList.filter((data) =>
       data.departmentName.toLowerCase().includes(searchTerm.toLowerCase())
     );
   };
@@ -110,19 +100,19 @@ export function ComboboxDepartment({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={`w-full justify-between ${className}`}
+          className="sm:w-full w-full justify-between col-span-2"
           disabled={isLoading}
         >
           {isLoading ? (
             <>
-              <span className="text-gray-400">Loading departement...</span>
+              <span className="text-gray-400">Loading department...</span>
               <div className="animate-spin ml-2 h-4 w-4 border-2 border-gray-300 border-t-primary rounded-full"></div>
             </>
           ) : (
             <>
               {selectedItem
                 ? selectedItem.departmentName
-                : "Select Department..."}
+                : "Select Departement..."}
               <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
             </>
           )}
@@ -132,11 +122,11 @@ export function ComboboxDepartment({
         className="p-0"
         align="start"
         style={{ width: buttonRef.current?.offsetWidth }}
-        id="menu-type"
+        id="data-type"
       >
         <Command className="w-full">
           <CommandInput
-            placeholder="Search menu..."
+            placeholder="Search data..."
             className="h-9"
             onValueChange={setSearchTerm}
           />
@@ -145,14 +135,14 @@ export function ComboboxDepartment({
               <div className="py-6 text-center">
                 <div className="animate-spin mx-auto h-6 w-6 border-2 border-gray-300 border-t-primary rounded-full"></div>
                 <p className="mt-2 text-sm text-gray-500">
-                  Loading departement...
+                  Loading department...
                 </p>
               </div>
             ) : (
               <>
-                <CommandEmpty>No menu found</CommandEmpty>
+                <CommandEmpty>No data found</CommandEmpty>
                 <CommandGroup>
-                  {displayedDepartment.map((data) => (
+                  {displayedData.map((data) => (
                     <CommandItem
                       key={data.id}
                       value={data.departmentName}
@@ -175,12 +165,12 @@ export function ComboboxDepartment({
                   ))}
                 </CommandGroup>
                 {!isLoading &&
-                  displayedDepartment.length < getFiltered().length && (
+                  displayedData.length < getFilteredDatas().length && (
                     <div className="p-2 flex justify-center">
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={loadMoreMenus}
+                        onClick={loadMoredatas}
                         disabled={loadingMore}
                         className="w-full text-xs"
                       >
@@ -191,8 +181,8 @@ export function ComboboxDepartment({
                           </>
                         ) : (
                           <>
-                            Load More ({displayedDepartment.length} of{" "}
-                            {getFiltered().length})
+                            Load More ({displayedData.length} of{" "}
+                            {getFilteredDatas().length})
                           </>
                         )}
                       </Button>

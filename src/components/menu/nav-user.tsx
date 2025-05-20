@@ -24,7 +24,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Users } from "@/lib/model/view/Users";
+import { Users } from "@/lib/model/entity/Users";
 import { useEffect, useState } from "react";
 import { SkeletonUsers } from "../util/skeleton-util";
 
