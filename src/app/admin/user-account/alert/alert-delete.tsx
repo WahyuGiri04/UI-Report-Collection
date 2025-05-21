@@ -12,14 +12,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { ToastError, ToastSuccess } from "@/components/util/toast-util";
 import { DeleteUsers } from "@/lib/service/users-service";
-import { Trash2Icon } from "lucide-react";
+import { CheckIcon, CircleX, Trash2Icon } from "lucide-react";
 
-export function Alert({
+export function AlertDelete({
   id,
   onSuccess,
+  isActive,
 }: {
   id: number;
   onSuccess?: () => void;
+  isActive?: string;
 }) {
   const handleDelete = async () => {
     const response = await DeleteUsers(id);

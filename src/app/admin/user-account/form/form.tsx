@@ -82,8 +82,6 @@ export function Form({
       return;
     }
 
-    console.log(newData);
-
     setData(newData);
 
     setIsLoading(true);

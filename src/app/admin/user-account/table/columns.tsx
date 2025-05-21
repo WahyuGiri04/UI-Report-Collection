@@ -1,8 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { SafeDynamicIcon } from "@/components/util/safe-dynamic-icon";
 import { ColumnDef } from "@tanstack/react-table";
-import { Alert } from "../alert/alert";
+import { AlertActiveInActive } from "../alert/alert-active-inactive";
 import {
   Tooltip,
   TooltipContent,
@@ -12,8 +11,14 @@ import {
 import { DialogDetail } from "../alert/detail";
 import { UsersSearch } from "@/lib/model/view/UsersSearch";
 import { Users } from "@/lib/model/entity/Users";
-import { PencilIcon } from "lucide-react";
+import {
+  CheckCircle2Icon,
+  CircleX,
+  LoaderIcon,
+  PencilIcon,
+} from "lucide-react";
 import { ro } from "date-fns/locale";
+import { AlertDelete } from "../alert/alert-delete";
 
 export const columns = (
   onReload: (searchForm: UsersSearch, page: number, row: number) => void,
@@ -46,6 +51,22 @@ export const columns = (
     header: "Department",
     cell: ({ row }) => (
       <>{row.original.employee?.departement?.departmentName}</>
+    ),
+  },
+  {
+    header: "Status",
+    cell: ({ row }) => (
+      <Badge
+        variant="outline"
+        className="flex gap-1 px-1.5 text-muted-foreground [&_svg]:size-3"
+      >
+        {row.original.isDeleted === "N" ? (
+          <CheckCircle2Icon className="text-green-500 dark:text-green-400" />
+        ) : (
+          <CircleX className="text-red-500 dark:text-red-400" />
+        )}
+        {row.original.isDeleted === "Y" ? "Inactive" : "Active"}
+      </Badge>
     ),
   },
   {
@@ -107,24 +128,53 @@ export const columns = (
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        <div className="h-5 w-px bg-gray-300" />
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div>
-                <Alert
-                  id={row.original.id!}
-                  onSuccess={() => {
-                    onReload(searchForm, page, rowNumber);
-                  }}
-                />
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Delete</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        {row.original.username !== "admin" ? (
+          <>
+            <div className="h-5 w-px bg-gray-300" />
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div>
+                    <AlertActiveInActive
+                      id={row.original.id!}
+                      onSuccess={() => {
+                        onReload(searchForm, page, rowNumber);
+                      }}
+                      isActive={row.original.isDeleted}
+                    />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {row.original.isDeleted === "Y" ? (
+                    <p>Set Active</p>
+                  ) : (
+                    <p>Set InActive</p>
+                  )}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <div className="h-5 w-px bg-gray-300" />
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div>
+                    <AlertDelete
+                      id={row.original.id!}
+                      onSuccess={() => {
+                        onReload(searchForm, page, rowNumber);
+                      }}
+                    />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Delete</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </>
+        ) : (
+          <div></div>
+        )}
       </div>
     ),
   },

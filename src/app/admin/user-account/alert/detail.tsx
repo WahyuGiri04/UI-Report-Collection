@@ -17,7 +17,7 @@ import { SafeDynamicIcon } from "@/components/util/safe-dynamic-icon";
 import { Users } from "@/lib/model/entity/Users";
 import { GetEmployeeById } from "@/lib/service/employee-service";
 import { GetUsersById } from "@/lib/service/users-service";
-import { Eye } from "lucide-react";
+import { CheckCircle2Icon, CircleX, Eye } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type DetailProp = {
@@ -117,8 +117,22 @@ export function DialogDetail({ id }: DetailProp) {
               })}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">-</p>
+            <p className="text-sm text-muted-foreground col-span-3">-</p>
           )}
+          <Label htmlFor="department" className="text-left">
+            Status
+          </Label>
+          <Badge
+            variant="outline"
+            className="flex gap-1 px-1.5 text-muted-foreground [&_svg]:size-3 col-span-3"
+          >
+            {data?.isDeleted === "N" ? (
+              <CheckCircle2Icon className="text-green-500 dark:text-green-400" />
+            ) : (
+              <CircleX className="text-red-500 dark:text-red-400" />
+            )}
+            {data?.isDeleted === "Y" ? "Inactive" : "Active"}
+          </Badge>
         </div>
         <DialogFooter className="sm:justify-end mt-4">
           <DialogClose asChild>
