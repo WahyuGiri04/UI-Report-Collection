@@ -3,13 +3,13 @@ export interface Employee {
   nip?: string;
   firstName?: string;
   lastName?: string;
-  fullName: string;
-  gender: string;
-  alamat: string;
-  tanggalLahir: string;
-  tempatLahir: string;
-  email: string;
-  departement: Departement | null;
+  fullName?: string;
+  gender?: string;
+  alamat?: string;
+  tanggalLahir?: string;
+  tempatLahir?: string;
+  email?: string;
+  departement?: Departement | null;
 }
 
 export interface Departement {

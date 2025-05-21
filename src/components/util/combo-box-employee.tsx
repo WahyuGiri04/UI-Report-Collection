@@ -51,7 +51,7 @@ export function ComboboxEmployee({
     if (dataList.length > 0) {
       if (searchTerm) {
         const filtered = dataList.filter((data) =>
-          data.fullName.toLowerCase().includes(searchTerm.toLowerCase())
+          data.fullName?.toLowerCase().includes(searchTerm.toLowerCase())
         );
         setDisplayedData(filtered.slice(0, batchSize));
       } else {
@@ -92,7 +92,7 @@ export function ComboboxEmployee({
   const getFilteredDatas = () => {
     if (!searchTerm) return dataList;
     return dataList.filter((data) =>
-      data.fullName.toLowerCase().includes(searchTerm.toLowerCase())
+      data.fullName?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   };
 
@@ -154,7 +154,9 @@ export function ComboboxEmployee({
                         setSearchTerm("");
                       }}
                     >
-                      <span className="flex-1">{data.fullName}</span>
+                      <span className="flex-1">
+                        {data.nip} - {data.fullName}
+                      </span>
                       <Check
                         className={cn(
                           "ml-auto h-4 w-4",
