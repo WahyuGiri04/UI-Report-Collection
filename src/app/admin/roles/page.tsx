@@ -34,7 +34,6 @@ import {
 } from "@/components/ui/collapsible";
 import { GetRolesPage } from "@/lib/service/roles-service";
 import { Roles } from "@/lib/model/entity/Roles";
-import { resolve } from "path";
 import { DataTable } from "@/components/util/data-table";
 
 export default function Page() {
