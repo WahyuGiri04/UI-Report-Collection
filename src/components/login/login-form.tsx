@@ -34,6 +34,7 @@ export function LoginForm({
         Cookies.set("token", response.data.token, {
           expires: 1,
           // secure: true,
+          secure: window.location.protocol === "https:",
           sameSite: "Strict",
         });
       }
