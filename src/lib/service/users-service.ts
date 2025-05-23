@@ -66,6 +66,22 @@ export async function AddUsers(data: Users): Promise<BaseResponse<Users>> {
   return await response.json();
 }
 
+export async function ResetAccount(id: number): Promise<BaseResponse<Users>> {
+  const token = GetToken();
+  const response = await fetch(
+    `${API_BASE_URL}admin/users/reset-account/${id}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return await response.json();
+}
+
 export async function UpdateUsers(
   data: Users,
   id: number

@@ -1,5 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { AlertActiveInActive } from "../alert/alert-active-inactive";
 import {
@@ -11,14 +10,9 @@ import {
 import { DialogDetail } from "../alert/detail";
 import { UsersSearch } from "@/lib/model/view/UsersSearch";
 import { Users } from "@/lib/model/entity/Users";
-import {
-  CheckCircle2Icon,
-  CircleX,
-  LoaderIcon,
-  PencilIcon,
-} from "lucide-react";
-import { ro } from "date-fns/locale";
+import { CheckCircle2Icon, CircleX } from "lucide-react";
 import { AlertDelete } from "../alert/alert-delete";
+import { AlertResetPassword } from "../alert/alert-reset-password";
 
 export const columns = (
   onReload: (searchForm: UsersSearch, page: number, row: number) => void,
@@ -110,24 +104,30 @@ export const columns = (
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        <div className="h-5 w-px bg-gray-300" />
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
-                size="sm"
-                onClick={() => onEditClick(row.original.id!)}
-              >
-                <PencilIcon className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Edit</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        {row.original.isDeleted !== "Y" ? (
+          <>
+            <div className="h-5 w-px bg-gray-300" />
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div>
+                    <AlertResetPassword
+                      id={row.original.id!}
+                      onSuccess={() => {
+                        onReload(searchForm, page, rowNumber);
+                      }}
+                    />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Reset Password</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </>
+        ) : (
+          <div></div>
+        )}
         {row.original.username !== "admin" ? (
           <>
             <div className="h-5 w-px bg-gray-300" />
