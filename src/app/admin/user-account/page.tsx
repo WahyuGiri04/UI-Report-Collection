@@ -63,7 +63,7 @@ export default function Page() {
     if (searchForm) {
       fetchPageData(searchForm, page, row);
     }
-  }, []);
+  }, [searchForm, page, row]);
   const fetchPageData = async (
     dataSearchForm: UsersSearch,
     pageNumber: number,
@@ -120,18 +120,6 @@ export default function Page() {
     fetchPageData(searchForm, page, row);
   };
 
-  const handleEditClick = (id: number) => {
-    setEditId(id);
-    setActiveTab("form-data");
-    if (tabsRef.current) {
-      const formTabTrigger = tabsRef.current.querySelector(
-        '[value="form-data"]'
-      ) as HTMLButtonElement;
-      if (formTabTrigger) {
-        formTabTrigger.click();
-      }
-    }
-  };
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -298,13 +286,7 @@ export default function Page() {
                   </Collapsible>
                   <div className="py-4">
                     <DataTable
-                      columns={columns(
-                        fetchPageData,
-                        searchForm,
-                        page,
-                        row,
-                        handleEditClick
-                      )}
+                      columns={columns(fetchPageData, searchForm, page, row)}
                       data={data}
                       isLoading={isLoading}
                     />

@@ -1,6 +1,7 @@
-import { GalleryVerticalEnd } from "lucide-react"
+import { GalleryVerticalEnd } from "lucide-react";
 
-import { LoginForm } from "@/components/login/login-form-2"
+import { LoginForm } from "@/components/login/login-form-2";
+import Image from "next/image";
 
 export default function LoginPage() {
   return (
@@ -22,13 +23,15 @@ export default function LoginPage() {
       </div>
       <div className="relative hidden md:flex items-center justify-center bg-muted h-full w-full rounded-lg overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center">
-          <img
-              src="/images/login-hero.svg"
-              alt="Image"
-              className="max-w-full max-h-full dark:brightness-[0.2] dark:grayscale object-contain"
+          <Image
+            src="/images/login-hero.svg"
+            alt="Login hero"
+            width={800} // ← kamu bisa sesuaikan ukuran asli SVG-nya
+            height={600}
+            className="max-w-full max-h-full dark:brightness-[0.2] dark:grayscale object-contain"
           />
         </div>
       </div>
     </div>
-  )
+  );
 }

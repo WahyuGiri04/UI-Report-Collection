@@ -13,13 +13,13 @@ import { Users } from "@/lib/model/entity/Users";
 import { CheckCircle2Icon, CircleX } from "lucide-react";
 import { AlertDelete } from "../alert/alert-delete";
 import { AlertResetPassword } from "../alert/alert-reset-password";
+import { Roles } from "@/lib/model/entity/Roles";
 
 export const columns = (
   onReload: (searchForm: UsersSearch, page: number, row: number) => void,
   searchForm: UsersSearch,
   page: number,
-  rowNumber: number,
-  onEditClick: (id: number) => void
+  rowNumber: number
 ): ColumnDef<Users>[] => [
   {
     header: " ",
@@ -74,7 +74,7 @@ export const columns = (
 
       return (
         <div className="flex flex-wrap gap-1">
-          {roles.map((role: any, idx: number) => {
+          {roles.map((role: Roles, idx: number) => {
             const isAdmin = role.roleName?.toLowerCase().includes("admin");
 
             return (

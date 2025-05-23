@@ -12,10 +12,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { SafeDynamicIcon } from "@/components/util/safe-dynamic-icon";
+import { Roles } from "@/lib/model/entity/Roles";
 import { Users } from "@/lib/model/entity/Users";
-import { GetEmployeeById } from "@/lib/service/employee-service";
 import { GetUsersById } from "@/lib/service/users-service";
 import { CheckCircle2Icon, CircleX, Eye } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -29,7 +27,7 @@ export function DialogDetail({ id }: DetailProp) {
 
   useEffect(() => {
     fetchDetail(id);
-  }, []);
+  }, [id]);
 
   const fetchDetail = async (id: number) => {
     const response = await GetUsersById(id);
@@ -104,7 +102,7 @@ export function DialogDetail({ id }: DetailProp) {
           </Label>
           {data?.roles && data.roles.length > 0 ? (
             <div className="col-span-3 w-full">
-              {data.roles.map((role: any, idx: number) => {
+              {data.roles.map((role: Roles, idx: number) => {
                 const isAdmin = role.roleName?.toLowerCase().includes("admin");
                 return (
                   <Badge

@@ -18,7 +18,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { SafeDynamicIcon } from "@/components/util/safe-dynamic-icon";
 import { useEffect, useRef, useState } from "react";
 import { Department } from "@/lib/model/entity/Departement";
 import { GetDepartments } from "@/lib/service/department-service";

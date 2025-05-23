@@ -12,7 +12,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { ToastError, ToastSuccess } from "@/components/util/toast-util";
 import { DeleteEmployee } from "@/lib/service/employee-service";
-import { DeleteSubMenu } from "@/lib/service/sub-menu-service";
 import { Trash2Icon } from "lucide-react";
 
 export function Alert({

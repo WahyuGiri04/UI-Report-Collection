@@ -19,11 +19,9 @@ import { useState } from "react";
 export function AlertResetPassword({
   id,
   onSuccess,
-  isActive,
 }: {
   id: number;
   onSuccess?: () => void;
-  isActive?: string;
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const handleDelete = async () => {

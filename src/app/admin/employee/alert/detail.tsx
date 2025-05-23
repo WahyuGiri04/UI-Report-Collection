@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -28,7 +27,7 @@ export function DialogDetail({ id }: DetailProp) {
 
   useEffect(() => {
     fetchDetail(id);
-  }, []);
+  }, [id]);
 
   const fetchDetail = async (id: number) => {
     const response = await GetEmployeeById(id);

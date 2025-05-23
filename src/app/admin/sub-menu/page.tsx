@@ -52,7 +52,7 @@ export default function Page() {
 
   useEffect(() => {
     fetchPageData(searchSubMenuName, searchMainMenuId, page, row);
-  }, []);
+  }, [searchSubMenuName, searchMainMenuId, page, row]);
 
   const fetchPageData = async (
     subMenuName: string,

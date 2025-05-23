@@ -3,8 +3,7 @@ import { Button } from "@/components/ui/button";
 import { SafeDynamicIcon } from "@/components/util/safe-dynamic-icon";
 import { ColumnDef } from "@tanstack/react-table";
 import { Alert } from "../alert/alert";
-import { Eye, PencilIcon } from "lucide-react";
-import { SubMenu } from "@/lib/model/entity/SubMenu";
+import { PencilIcon } from "lucide-react";
 import { EmployeeSearch } from "@/lib/model/view/EmployeeSearch";
 import { Employee } from "@/lib/model/entity/Employee";
 import {

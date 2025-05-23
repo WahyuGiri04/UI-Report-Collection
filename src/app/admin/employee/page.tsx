@@ -62,7 +62,7 @@ export default function Page() {
     if (searchEmployeeForm) {
       fetchPageData(searchEmployeeForm, page, row);
     }
-  }, []);
+  }, [searchEmployeeForm, page, row]);
   const fetchPageData = async (
     employeeSearchForm: EmployeeSearch,
     pageNumber: number,

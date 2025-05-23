@@ -50,7 +50,7 @@ export default function Page() {
 
   useEffect(() => {
     fetchPageData(searchRoleName, page, row);
-  }, []);
+  }, [searchRoleName, page, row]);
 
   const fetchPageData = async (
     roleName: string,

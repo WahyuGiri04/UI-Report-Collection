@@ -13,7 +13,6 @@ import {
   ChevronRightIcon,
   ChevronsLeftIcon,
   ChevronsRightIcon,
-  ChevronsUpDown,
   RotateCcwIcon,
   Search,
   SearchIcon,
@@ -31,12 +30,6 @@ import { GetMenuPage } from "@/lib/service/menu-service";
 import { Form } from "./form/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import {
   Collapsible,
   CollapsibleContent,
@@ -59,7 +52,7 @@ export default function Page() {
 
   useEffect(() => {
     fetchPageData(searchMenuName, searchMenuType, page, row);
-  }, []);
+  }, [searchMenuName, searchMenuType, page, row]);
 
   const fetchPageData = async (
     menuName: string,

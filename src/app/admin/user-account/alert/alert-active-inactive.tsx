@@ -11,9 +11,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { ToastError, ToastSuccess } from "@/components/util/toast-util";
-import { Users } from "@/lib/model/entity/Users";
 import {
-  DeleteUsers,
   GetUsersById,
   UpdateUsers,
 } from "@/lib/service/users-service";

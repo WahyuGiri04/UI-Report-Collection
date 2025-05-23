@@ -38,7 +38,7 @@ export default function Page() {
 
   useEffect(() => {
     fetchPageData(searchDepartmentName, page, row);
-  }, []);
+  }, [searchDepartmentName, page, row]);
 
   const fetchPageData = async (
     departmentName: string,

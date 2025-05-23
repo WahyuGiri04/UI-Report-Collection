@@ -66,11 +66,11 @@ export function FormDepartment({
     setOpen(false);
   };
 
-  if (id !== 0) {
-    useEffect(() => {
+  useEffect(() => {
+    if (id !== 0) {
       fetchData(id);
-    }, []);
-  }
+    }
+  }, [id]);
 
   const fetchData = async (id: number) => {
     const response = await GetDepartmentsById(id);

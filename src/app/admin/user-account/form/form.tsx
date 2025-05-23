@@ -14,7 +14,6 @@ import {
 } from "@/lib/service/users-service";
 import { ComboboxEmployee } from "@/components/util/combo-box-employee";
 import { GetEmployeeById } from "@/lib/service/employee-service";
-import { Employee } from "@/lib/model/entity/Employee";
 
 type formEmpProp = {
   validEmployee: boolean;

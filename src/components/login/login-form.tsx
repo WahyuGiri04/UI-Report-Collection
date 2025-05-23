@@ -11,6 +11,7 @@ import { Login } from "@/lib/service/login-service"
 import { ToastError, ToastSuccess } from "../util/toast-util"
 import Cookies from "js-cookie"
 import { useRouter } from "next/navigation"
+import Image from "next/image";
 
 export function LoginForm({
   className,
@@ -87,15 +88,24 @@ export function LoginForm({
                 />
               </div>
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? (<><Loader2 className="mr-2 h-4 w-4 animate-spin" />Logging in...</>) : ("Login")}
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Logging in...
+                  </>
+                ) : (
+                  "Login"
+                )}
               </Button>
             </div>
           </form>
           <div className="relative hidden md:flex items-center justify-center bg-muted h-full w-full rounded-lg overflow-hidden">
             <div className="absolute inset-0 flex items-center justify-center">
-              <img
+              <Image
                 src="/images/login-hero.svg"
-                alt="Image"
+                alt="Login illustration"
+                width={800} // ← ganti sesuai ukuran asli SVG
+                height={600}
                 className="max-w-full max-h-full dark:brightness-[0.8] object-contain"
               />
             </div>
@@ -103,5 +113,5 @@ export function LoginForm({
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
