@@ -4,7 +4,6 @@ import { AppSidebar } from "@/components/menu/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useEffect, useState, useRef } from "react";
 import { Header } from "@/components/header/header";
-import { DataTable } from "./table/data-table";
 import { columns } from "./table/columns";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -35,6 +34,8 @@ import {
 } from "@/components/ui/collapsible";
 import { GetRolesPage } from "@/lib/service/roles-service";
 import { Roles } from "@/lib/model/entity/Roles";
+import { resolve } from "path";
+import { DataTable } from "@/components/util/data-table";
 
 export default function Page() {
   const [data, setData] = useState<Roles[]>([]);
@@ -47,6 +48,7 @@ export default function Page() {
   const [activeTab, setActiveTab] = useState("data-table");
   const tabsRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchPageData(searchRoleName, page, row);
@@ -57,6 +59,7 @@ export default function Page() {
     pageNumber: number,
     rowPerPage: number
   ) => {
+    setIsLoading(true);
     const response = await GetRolesPage(roleName, pageNumber, rowPerPage);
     if (response.data !== undefined) {
       setTotalData(response.data?.totalData);
@@ -64,6 +67,8 @@ export default function Page() {
       setPage(pageNumber);
       setTotalPage(response.data?.totalPages);
     }
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setIsLoading(false);
   };
 
   const onChangeRow = async (value: number) => {
@@ -204,6 +209,7 @@ export default function Page() {
                         handleEditClick
                       )}
                       data={data}
+                      isLoading={isLoading}
                     />
                   </div>
                   <div className="flex items-center justify-between px-4 py-4">
@@ -287,7 +293,7 @@ export default function Page() {
             <TabsContent value="form-data">
               <Card>
                 <Form
-                  title={editId === 0 ? "Add Roles Menu" : "Edit Roles Menu"}
+                  title={editId === 0 ? "Add Roles" : "Edit Roles"}
                   id={editId}
                   onSuccess={handleFormSuccess}
                 />

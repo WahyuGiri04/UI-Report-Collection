@@ -4,7 +4,6 @@ import { AppSidebar } from "@/components/menu/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useEffect, useState, useRef } from "react";
 import { Header } from "@/components/header/header";
-import { DataTable } from "./table/data-table";
 import { columns } from "./table/columns";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -38,6 +37,7 @@ import { GetUsersPage } from "@/lib/service/users-service";
 import { Users } from "@/lib/model/entity/Users";
 import { ComboboxDepartment } from "@/components/util/combo-box-department";
 import { ComboboxRoles } from "@/components/util/combo-box-roles";
+import { DataTable } from "@/components/util/data-table";
 
 export default function Page() {
   const [data, setData] = useState<Users[]>([]);
@@ -119,7 +119,6 @@ export default function Page() {
     });
     fetchPageData(searchForm, page, row);
   };
-
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);

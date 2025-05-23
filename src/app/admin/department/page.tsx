@@ -4,7 +4,6 @@ import { AppSidebar } from "@/components/menu/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useEffect, useState } from "react";
 import { Header } from "@/components/header/header";
-import { DataTable } from "./table/data-table";
 import { columns } from "./table/columns";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -27,6 +26,7 @@ import {
 import { FormDepartment } from "./form/form";
 import { GetDepartmentsPage } from "@/lib/service/department-service";
 import { Department } from "@/lib/model/entity/Departement";
+import { DataTable } from "@/components/util/data-table";
 
 export default function Page() {
   const [data, setData] = useState<Department[]>([]);
@@ -35,6 +35,7 @@ export default function Page() {
   const [row, setRow] = useState(10);
   const [page, setPage] = useState(1);
   const [searchDepartmentName, setSearchDepartmentName] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchPageData(searchDepartmentName, page, row);
@@ -45,6 +46,7 @@ export default function Page() {
     pageNumber: number,
     rowPerPage: number
   ) => {
+    setIsLoading(true);
     const response = await GetDepartmentsPage(
       departmentName,
       pageNumber,
@@ -56,6 +58,8 @@ export default function Page() {
       setPage(pageNumber);
       setTotalPage(response.data?.totalPages);
     }
+    await new Promise((resolver) => setTimeout(resolver, 1000));
+    setIsLoading(false);
   };
 
   const onChangeRow = async (value: number) => {
@@ -131,6 +135,7 @@ export default function Page() {
           <DataTable
             columns={columns(fetchPageData, searchDepartmentName, page, row)}
             data={data}
+            isLoading={isLoading}
           />
           <div className="flex items-center justify-between px-4 py-4">
             <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">

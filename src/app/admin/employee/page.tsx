@@ -4,7 +4,6 @@ import { AppSidebar } from "@/components/menu/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useEffect, useState, useRef } from "react";
 import { Header } from "@/components/header/header";
-import { DataTable } from "./table/data-table";
 import { columns } from "./table/columns";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -38,6 +37,7 @@ import { EmployeeSearch } from "@/lib/model/view/EmployeeSearch";
 import { Employee } from "@/lib/model/entity/Employee";
 import { ComboboxGender } from "@/components/util/combo-box-gender";
 import { ComboboxDepartment } from "@/components/util/combo-box-department";
+import { DataTable } from "@/components/util/data-table";
 
 export default function Page() {
   const [data, setData] = useState<Employee[]>([]);

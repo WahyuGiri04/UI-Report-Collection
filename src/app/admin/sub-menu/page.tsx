@@ -4,7 +4,6 @@ import { AppSidebar } from "@/components/menu/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useEffect, useState, useRef } from "react";
 import { Header } from "@/components/header/header";
-import { DataTable } from "./table/data-table";
 import { columns } from "./table/columns";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -36,6 +35,7 @@ import {
 import { GetSubMenuPage } from "@/lib/service/sub-menu-service";
 import { SubMenu } from "@/lib/model/entity/SubMenu";
 import { ComboboxMainMenu } from "../../../components/util/combo-box-main-menu";
+import { DataTable } from "@/components/util/data-table";
 
 export default function Page() {
   const [data, setData] = useState<SubMenu[]>([]);
@@ -49,6 +49,7 @@ export default function Page() {
   const [activeTab, setActiveTab] = useState("data-table");
   const tabsRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchPageData(searchSubMenuName, searchMainMenuId, page, row);
@@ -60,6 +61,7 @@ export default function Page() {
     pageNumber: number,
     rowPerPage: number
   ) => {
+    setIsLoading(true);
     const response = await GetSubMenuPage(
       subMenuName,
       Number(mainMenuId),
@@ -72,6 +74,8 @@ export default function Page() {
       setPage(pageNumber);
       setTotalPage(response.data?.totalPages);
     }
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setIsLoading(false);
   };
 
   const onChangeRow = async (value: number) => {
@@ -221,6 +225,7 @@ export default function Page() {
                         handleEditClick
                       )}
                       data={data}
+                      isLoading={isLoading}
                     />
                   </div>
                   <div className="flex items-center justify-between px-4 py-4">
