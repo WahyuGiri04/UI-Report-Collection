@@ -16,7 +16,7 @@ export function LoadingPage() {
           className="h-full w-full"
           unoptimized
         />
-        <span className="text-gray-700">Loading...</span>
+        <span className="text-gray-700 dark:text-white">Loading...</span>
       </div>
     </div>
   );
