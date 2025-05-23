@@ -1,50 +1,48 @@
-"use client"
+"use client";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useState } from "react"
-import { Loader2 } from "lucide-react"
-import { Login } from "@/lib/service/login-service"
-import { ToastError, ToastSuccess } from "../util/toast-util"
-import Cookies from "js-cookie"
-import { useRouter } from "next/navigation"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import { Login } from "@/lib/service/login-service";
+import { ToastError, ToastSuccess } from "../util/toast-util";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-
-  const [isLoading, setIsLoading] = useState(false)
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
 
-    const response = await Login({ username, password })
+    const response = await Login({ username, password });
 
     if (response.statusCode === 200) {
-      ToastSuccess(response.message)
+      ToastSuccess(response.message);
       if (response.data?.token) {
         Cookies.set("token", response.data.token, {
           expires: 1,
-          secure: true,
+          // secure: true,
           sameSite: "Strict",
         });
       }
-      router.push("/dashboard/dashboard-default")
+      router.push("/dashboard/dashboard-default");
     } else {
-      ToastError(response.message)
+      ToastError(response.message);
       setIsLoading(false);
     }
-
-  }
+  };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
