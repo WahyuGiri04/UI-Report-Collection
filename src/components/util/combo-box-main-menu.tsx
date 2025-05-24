@@ -52,7 +52,7 @@ export function ComboboxMainMenu({
     if (menuList.length > 0) {
       if (searchTerm) {
         const filtered = menuList.filter((menu) =>
-          menu.menuName.toLowerCase().includes(searchTerm.toLowerCase())
+          menu.menuName?.toLowerCase().includes(searchTerm.toLowerCase())
         );
         setDisplayedMenus(filtered.slice(0, batchSize));
       } else {
@@ -93,7 +93,7 @@ export function ComboboxMainMenu({
   const getFilteredMenus = () => {
     if (!searchTerm) return menuList;
     return menuList.filter((menu) =>
-      menu.menuName.toLowerCase().includes(searchTerm.toLowerCase())
+      menu.menuName?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   };
 

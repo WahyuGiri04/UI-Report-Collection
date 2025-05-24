@@ -33,17 +33,17 @@ import {
 } from "@/components/ui/collapsible";
 import { ComboboxRoles } from "@/components/util/combo-box-roles";
 import { DataTable } from "@/components/util/data-table";
-import { UsersRole } from "@/lib/model/entity/UsersRole";
-import { GetUsersRolePage } from "@/lib/service/user-role-service";
-import { ComboboxUsers } from "@/components/util/combo-box-users";
+import { RoleMenu } from "@/lib/model/entity/RoleMenu";
+import { GetRoleMenuPage } from "@/lib/service/role-menu-service";
+import { ComboboxMainMenu } from "@/components/util/combo-box-main-menu";
 
 export default function Page() {
-  const [data, setData] = useState<UsersRole[]>([]);
+  const [data, setData] = useState<RoleMenu[]>([]);
   const [totalData, setTotalData] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const [row, setRow] = useState(10);
   const [page, setPage] = useState(1);
-  const [userId, setUserId] = useState("");
+  const [menuId, setMenuId] = useState("");
   const [roleId, setRoleId] = useState("");
   const [editId, setEditId] = useState(0);
   const [activeTab, setActiveTab] = useState("data-table");
@@ -52,17 +52,17 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchPageData(userId, roleId, page, row);
+    fetchPageData(menuId, roleId, page, row);
   }, [page, row]);
   const fetchPageData = async (
-    userId: string,
+    menuId: string,
     roleId: string,
     pageNumber: number,
     rowPerPage: number
   ) => {
     setIsLoading(true);
-    const response = await GetUsersRolePage(
-      userId,
+    const response = await GetRoleMenuPage(
+      menuId,
       roleId,
       pageNumber,
       rowPerPage
@@ -79,34 +79,34 @@ export default function Page() {
 
   const onChangeRow = async (value: number) => {
     setRow(value);
-    fetchPageData(userId, roleId, 1, value);
+    fetchPageData(menuId, roleId, 1, value);
   };
 
   const goToFirstPage = () => {
-    if (page !== 1) fetchPageData(userId, roleId, 1, row);
+    if (page !== 1) fetchPageData(menuId, roleId, 1, row);
   };
 
   const goToPrevPage = () => {
-    if (page > 1) fetchPageData(userId, roleId, page - 1, row);
+    if (page > 1) fetchPageData(menuId, roleId, page - 1, row);
   };
 
   const goToNextPage = () => {
-    if (page < totalPage) fetchPageData(userId, roleId, page + 1, row);
+    if (page < totalPage) fetchPageData(menuId, roleId, page + 1, row);
   };
 
   const goToLastPage = () => {
-    if (page !== totalPage) fetchPageData(userId, roleId, totalPage, row);
+    if (page !== totalPage) fetchPageData(menuId, roleId, totalPage, row);
   };
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    fetchPageData(userId, roleId, page, row);
+    fetchPageData(menuId, roleId, page, row);
   };
 
   const handleReset = () => {
-    setUserId("");
+    setMenuId("");
     setRoleId("");
-    fetchPageData(userId, roleId, page, row);
+    fetchPageData(menuId, roleId, page, row);
   };
 
   const handleTabChange = (value: string) => {
@@ -117,7 +117,7 @@ export default function Page() {
   };
 
   const handleFormSuccess = () => {
-    fetchPageData(userId, roleId, page, row);
+    fetchPageData(menuId, roleId, page, row);
     setActiveTab("data-table");
     setEditId(0);
     if (tabsRef.current) {
@@ -140,7 +140,7 @@ export default function Page() {
             <TabsList className="grid w-full sm:w-[400px] grid-cols-2">
               <TabsTrigger value="data-table">Data Table</TabsTrigger>
               <TabsTrigger value="form-data">
-                {editId === 0 ? "Add Users Role" : "Edit Users"}
+                {editId === 0 ? "Add Role Menu" : "Edit Role Menu"}
               </TabsTrigger>
             </TabsList>
             <TabsContent value="data-table">
@@ -167,12 +167,12 @@ export default function Page() {
                               htmlFor="department"
                               className="text-left sm:text-right"
                             >
-                              User
+                              Main Menu
                             </Label>
                             <div className="col-span-3">
-                              <ComboboxUsers
-                                value={userId}
-                                onChange={(value) => setUserId(value)}
+                              <ComboboxMainMenu
+                                value={menuId}
+                                onChange={(value) => setMenuId(value)}
                               />
                             </div>
                             <Label
@@ -212,7 +212,7 @@ export default function Page() {
                     <DataTable
                       columns={columns(
                         fetchPageData,
-                        userId,
+                        menuId,
                         roleId,
                         page,
                         row
@@ -302,7 +302,7 @@ export default function Page() {
             <TabsContent value="form-data">
               <Card>
                 <Form
-                  title={editId === 0 ? "Add User Role" : "Edit User"}
+                  title={editId === 0 ? "Add Role Menu" : "Edit Role Menu"}
                   id={editId}
                   onSuccess={handleFormSuccess}
                 />

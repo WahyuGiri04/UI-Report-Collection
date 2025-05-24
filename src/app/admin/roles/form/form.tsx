@@ -82,13 +82,12 @@ export function Form({
     setIsLoading(true);
     const response = await GetRolesById(roleId);
     if (response.data !== undefined) {
-      setRoleName(response.data.roleName);
-      setRoleIcon(response.data.icon);
-      setDescription(response.data.description);
+      setRoleName(response.data.roleName || "");
+      setRoleIcon(response.data.icon || "");
+      setDescription(response.data.description || "");
     }
     setIsLoading(false);
   };
-
   return (
     <div>
       <CardHeader>

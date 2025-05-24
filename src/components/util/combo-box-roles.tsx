@@ -48,7 +48,7 @@ export function ComboboxRoles({ value, onChange, className }: ComboboxProps) {
     if (dataList.length > 0) {
       if (searchTerm) {
         const filtered = dataList.filter((data) =>
-          data.roleName.toLowerCase().includes(searchTerm.toLowerCase())
+          data.roleName?.toLowerCase().includes(searchTerm.toLowerCase())
         );
         setDisplayedData(filtered.slice(0, batchSize));
       } else {
@@ -89,7 +89,7 @@ export function ComboboxRoles({ value, onChange, className }: ComboboxProps) {
   const getFilteredDatas = () => {
     if (!searchTerm) return dataList;
     return dataList.filter((data) =>
-      data.roleName.toLowerCase().includes(searchTerm.toLowerCase())
+      data.roleName?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   };
 
