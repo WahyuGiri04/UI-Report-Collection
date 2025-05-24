@@ -20,7 +20,7 @@ export async function GetUsersDetail(): Promise<BaseResponse<Users>> {
 
 export async function GetUserList(): Promise<BaseResponse<Users[]>> {
   const token = GetToken();
-  const response = await fetch(`${API_BASE_URL}/admin/users`, {
+  const response = await fetch(`${API_BASE_URL}admin/users`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
